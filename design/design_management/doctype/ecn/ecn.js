@@ -6,7 +6,7 @@ frappe.ui.form.on('ECN', {
 		cur_frm.add_custom_button(__("DMRN"), function() {
 			frappe.route_options = {
 			};
-		frappe.set_route('Form','Design Modification Request Note',"new-design-modification-request-note-1");
+		frappe.set_route('Form','DMRN',"new-dmrn-1");
 		}, __("Create"));
 	}
 });
