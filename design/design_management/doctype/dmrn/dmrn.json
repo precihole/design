@@ -1,0 +1,113 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-08-28 16:12:49.885206",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "originator",
+  "originator_name",
+  "from_department",
+  "design_engineer",
+  "column_break_5",
+  "date",
+  "to_department",
+  "type_of_modification",
+  "dmrn_details_section",
+  "dmrn_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "originator",
+   "fieldtype": "Link",
+   "label": "Originator",
+   "options": "User"
+  },
+  {
+   "fetch_from": "originator.full_name",
+   "fieldname": "originator_name",
+   "fieldtype": "Data",
+   "label": "Originator Name"
+  },
+  {
+   "fieldname": "from_department",
+   "fieldtype": "Link",
+   "label": "From Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "design_engineer",
+   "fieldtype": "Link",
+   "label": "Design Engineer",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "to_department",
+   "fieldtype": "Link",
+   "label": "To Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "type_of_modification",
+   "fieldtype": "Select",
+   "label": "Type of Modification",
+   "options": "\nDrafting Error\nDesign Error\nManufacturing Requested Modification\nPurchase Requested Modification\nAssembly Requested Modification\nSales Requested Modification\nDrafting Improvement\nDesign Improvement\nUpdation"
+  },
+  {
+   "fieldname": "dmrn_details_section",
+   "fieldtype": "Section Break",
+   "label": "DMRN Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "DMRN",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "dmrn_details",
+   "fieldtype": "Table",
+   "options": "DMRN Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-08-28 16:25:34.616769",
+ "modified_by": "Administrator",
+ "module": "Design Management",
+ "name": "DMRN",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
