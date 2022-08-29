@@ -1,0 +1,33 @@
+{
+ "chart_name": "Design Stock",
+ "chart_type": "Report",
+ "creation": "2022-08-29 11:12:38.111418",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "modified": "2022-08-29 11:17:02.893037",
+ "modified_by": "Administrator",
+ "module": "Design Management",
+ "name": "Design Stock",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Design Bin",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "x_field": "dept",
+ "y_axis": [
+  {
+   "color": "#ED6396",
+   "y_field": "qty"
+  }
+ ]
+}
