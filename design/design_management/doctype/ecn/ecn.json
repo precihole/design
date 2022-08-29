@@ -8,6 +8,7 @@
  "field_order": [
   "item_code",
   "description",
+  "revision",
   "remark",
   "column_break_4",
   "suggested_change",
@@ -23,6 +24,7 @@
    "options": "Item"
   },
   {
+   "fetch_from": "item_code.description",
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
@@ -60,12 +62,18 @@
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "item_code.revision_c",
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "label": "Revision"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-28 15:40:26.904527",
+ "modified": "2022-08-29 12:24:55.666471",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",

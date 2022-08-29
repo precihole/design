@@ -9,6 +9,9 @@
   "item_code",
   "department",
   "qty",
+  "reference_no",
+  "posting_date",
+  "item",
   "amended_from"
  ],
  "fields": [
@@ -38,12 +41,31 @@
    "options": "Design Printout Creation",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Table",
+   "label": "Item",
+   "options": "Design Printout Item"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Link",
+   "label": "Reference No",
+   "options": "DMRN",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-27 15:27:07.078535",
+ "modified": "2022-08-29 14:54:20.148533",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",

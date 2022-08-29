@@ -3,10 +3,27 @@
 
 frappe.ui.form.on('Design Printout Creation', {
 	refresh: function(frm) {
-		cur_frm.add_custom_button(__("Design Tranfer"), function() {
-			frappe.route_options = {
-			};
-		frappe.set_route('Form','DDN',"new-ddn-1");
-		}, __("Create"));
+		if(frm.doc.docstatus == 1){
+			cur_frm.add_custom_button(__("Design Tranfer"), function() {
+				frappe.route_options = {
+					
+				};
+			frappe.set_route('Form','DDN',"new-ddn-1");
+			}, __("Create"));
+		}
+		if(frm.doc.__islocal && frm.doc.reference_no){
+			frappe.model.with_doc("DMRN", frm.doc.reference_no, function() {
+				var mcd = frappe.model.get_doc("DMRN", frm.doc.reference_no);
+				frm.clear_table("item");
+					$.each(mcd.dmrn_details, function(i, d) {
+					i = frm.add_child("item");
+					i.item_code = d.drawing_no;
+					// i.bom = d.parent;
+					// i.workstation = d.workstation;
+					// i.operation_time = d.time_in_mins
+					});
+				frm.refresh_field("item");
+			});
+		}
 	}
 });
