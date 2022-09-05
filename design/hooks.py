@@ -185,3 +185,7 @@ app_license = "MIT"
 # auth_hooks = [
 #	"design.auth.validate"
 # ]
+
+fixtures = [
+    {"dt": "Custom Field", "filters": [["fieldname", "=", "revision_c"]]},
+]

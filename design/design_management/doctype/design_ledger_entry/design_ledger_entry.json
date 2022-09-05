@@ -15,6 +15,7 @@
   "voucher_no",
   "qty_change",
   "qty_after_transaction",
+  "revision_no",
   "is_cancelled"
  ],
  "fields": [
@@ -80,11 +81,16 @@
    "fieldtype": "Check",
    "label": " Is Cancelled",
    "read_only": 1
+  },
+  {
+   "fieldname": "revision_no",
+   "fieldtype": "Data",
+   "label": "Revision No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-27 12:53:55.991767",
+ "modified": "2022-09-05 16:18:17.843163",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Ledger Entry",
