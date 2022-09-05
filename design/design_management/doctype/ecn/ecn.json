@@ -1,16 +1,19 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2022-08-28 15:40:06.684360",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "item_code",
   "description",
   "revision",
   "remark",
   "column_break_4",
+  "posting_date",
   "suggested_change",
   "warehouse_detail",
   "total_qty",
@@ -68,15 +71,32 @@
    "fieldname": "revision",
    "fieldtype": "Data",
    "label": "Revision"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "ECN-.YYYY.-",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-05 17:11:36.089573",
+ "modified": "2022-09-05 17:53:21.900723",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

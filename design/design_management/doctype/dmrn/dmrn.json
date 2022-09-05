@@ -11,9 +11,9 @@
   "from_department",
   "design_engineer",
   "column_break_5",
-  "date",
-  "to_department",
+  "posting_date",
   "type_of_modification",
+  "to_department",
   "reference_no",
   "dmrn_details_section",
   "dmrn_details",
@@ -47,12 +47,6 @@
   {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
   },
   {
    "fieldname": "to_department",
@@ -91,12 +85,18 @@
    "label": "Reference No",
    "options": "ECN",
    "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-29 14:19:36.231349",
+ "modified": "2022-09-05 17:54:13.355819",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",
