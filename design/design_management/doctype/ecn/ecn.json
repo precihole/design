@@ -64,6 +64,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "item_code.revision_c",
    "fieldname": "revision",
    "fieldtype": "Data",
    "label": "Revision"
@@ -72,7 +73,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-03 09:22:43.081409",
+ "modified": "2022-09-05 17:11:36.089573",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",
@@ -93,5 +94,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

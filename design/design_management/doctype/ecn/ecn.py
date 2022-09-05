@@ -28,9 +28,9 @@ class ECN(Document):
 					if self.warehouse_detail:
 						for row in self.warehouse_detail:
 							self.remove(row)
-							self.total_qty = 0
+					self.total_qty = 0
 			else:
 				if self.warehouse_detail:
 					for row in self.warehouse_detail:
 						self.remove(row)
-						self.total_qty = 0
+				self.total_qty = 0
