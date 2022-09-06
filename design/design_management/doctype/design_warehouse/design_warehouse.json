@@ -1,33 +1,46 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:department_name",
+ "autoname": "field:warehouse",
  "creation": "2022-08-29 11:39:29.051794",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "department_name",
-  "status"
+  "status",
+  "warehouse",
+  "column_break_3",
+  "disabled"
  ],
  "fields": [
   {
-   "fieldname": "department_name",
-   "fieldtype": "Data",
-   "label": "Department Name",
-   "unique": 1
-  },
-  {
+   "default": "Enabled",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
    "options": "\nEnabled\nDisabled",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Data",
+   "label": "Warehouse",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-29 11:47:38.310509",
+ "modified": "2022-09-06 11:38:59.544059",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Warehouse",

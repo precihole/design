@@ -15,6 +15,29 @@ frappe.ui.form.on('DMRN', {
 				};
 			frappe.set_route('Form','Design Printout Creation',"new-design-printout-creation-1");
 			}, __("Create"));
+		}
+		if(frm.doc.__islocal && frm.doc.reference_no){
+			frappe.call({
+				async: false,
+				method: "frappe.client.get",
+				args: {
+					"doctype": "ECN",
+					"filters": {
+					'name': frm.doc.reference_no // where Clause 
+					},
+					"fieldname": ['item_code'] // fieldname to be fetched
+				},
+				callback: function (res) {
+					if (res.message !== undefined) {
+						var val=res.message;
+						var item_code = val.item_code
+						frm.clear_table("dmrn_details")
+						var childTable = frm.add_child("dmrn_details");
+						childTable.drawing_no=item_code
+						cur_frm.refresh_fields("dmrn_details");
+					}
+				}
+			})
 		}		
 	}
 });

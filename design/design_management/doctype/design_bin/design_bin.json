@@ -1,23 +1,18 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2022-08-27 12:22:49.418923",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "department",
+  "naming_series",
   "item_code",
-  "actual_qty"
+  "actual_qty",
+  "warehouse"
  ],
  "fields": [
-  {
-   "fieldname": "department",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Department",
-   "options": "Department"
-  },
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
@@ -29,14 +24,32 @@
    "fieldname": "actual_qty",
    "fieldtype": "Float",
    "label": "Actual Qty"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Design Warehouse"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "DIS-BIN-.YYYY.-",
+   "read_only": 1,
+   "reqd": 1,
+   "set_only_once": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-27 15:49:59.949671",
+ "modified": "2022-09-06 13:50:24.055403",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Bin",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

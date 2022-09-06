@@ -18,9 +18,7 @@ frappe.ui.form.on('Design Printout Creation', {
 					$.each(mcd.dmrn_details, function(i, d) {
 					i = frm.add_child("item");
 					i.item_code = d.drawing_no;
-					// i.bom = d.parent;
-					// i.workstation = d.workstation;
-					// i.operation_time = d.time_in_mins
+					i.revision = d.rev_no
 					});
 				frm.refresh_field("item");
 			});

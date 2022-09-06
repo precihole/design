@@ -11,7 +11,9 @@
   "revision_id",
   "item",
   "item_name",
-  "revision_description"
+  "column_break_5",
+  "revision_description",
+  "reference_no"
  ],
  "fields": [
   {
@@ -35,6 +37,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "item.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
    "label": "Item Name"
@@ -43,11 +46,22 @@
    "fieldname": "revision_description",
    "fieldtype": "Small Text",
    "label": "Revision Description"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Link",
+   "label": "Reference No",
+   "options": "DMRN",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-05 16:10:35.975381",
+ "modified": "2022-09-06 12:39:26.880658",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Revision",

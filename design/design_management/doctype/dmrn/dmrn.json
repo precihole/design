@@ -1,19 +1,21 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2022-08-28 16:12:49.885206",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "originator",
-  "originator_name",
   "from_department",
   "design_engineer",
   "column_break_5",
   "posting_date",
-  "type_of_modification",
+  "originator_name",
   "to_department",
+  "type_of_modification",
   "reference_no",
   "dmrn_details_section",
   "dmrn_details",
@@ -91,15 +93,27 @@
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "DMRN-.YYYY.-",
+   "read_only": 1,
+   "reqd": 1,
+   "set_only_once": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-05 17:54:13.355819",
+ "modified": "2022-09-06 10:21:40.204220",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

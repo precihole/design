@@ -6,38 +6,21 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "source_department",
-  "target_department",
   "item_code",
   "item_name",
   "revision",
-  "qty"
+  "qty",
+  "source_warehouse",
+  "target_warehouse"
  ],
  "fields": [
-  {
-   "columns": 2,
-   "default": "Design - PSPL",
-   "fieldname": "source_department",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Source Department",
-   "options": "Department"
-  },
   {
    "columns": 2,
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Code",
-   "options": "Item"
-  },
-  {
-   "columns": 2,
-   "fieldname": "target_department",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Target Department",
-   "options": "Department",
+   "options": "Item",
    "reqd": 1
   },
   {
@@ -64,12 +47,30 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Name"
+  },
+  {
+   "columns": 2,
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source Warehouse",
+   "options": "Design Warehouse",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Target Warehouse",
+   "options": "Design Warehouse",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-08-29 11:55:08.017218",
+ "modified": "2022-09-06 15:09:34.452741",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DDN Detail",

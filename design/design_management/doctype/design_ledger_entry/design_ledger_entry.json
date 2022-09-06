@@ -7,9 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "item_code",
-  "department",
   "posting_date",
   "posting_time",
+  "warehouse",
   "column_break_5",
   "voucher_type",
   "voucher_no",
@@ -24,13 +24,6 @@
    "fieldtype": "Link",
    "label": "Item Code",
    "options": "Item",
-   "read_only": 1
-  },
-  {
-   "fieldname": "department",
-   "fieldtype": "Link",
-   "label": "Department",
-   "options": "Department",
    "read_only": 1
   },
   {
@@ -85,12 +78,20 @@
   {
    "fieldname": "revision_no",
    "fieldtype": "Data",
-   "label": "Revision No"
+   "label": "Revision No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Design Warehouse",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-05 16:18:17.843163",
+ "modified": "2022-09-06 12:42:24.055330",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Ledger Entry",
