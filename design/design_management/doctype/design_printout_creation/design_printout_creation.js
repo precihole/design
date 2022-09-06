@@ -4,7 +4,7 @@
 frappe.ui.form.on('Design Printout Creation', {
 	refresh: function(frm) {
 		if(frm.doc.docstatus == 1){
-			cur_frm.add_custom_button(__("Design Tranfer"), function() {
+			cur_frm.add_custom_button(__("Design Transfer"), function() {
 				frappe.route_options = {
 					
 				};
