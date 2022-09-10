@@ -4,6 +4,12 @@
 frappe.ui.form.on('DMRN', {
 	refresh: function(frm) {
 		if(frm.doc.__islocal){
+			frm.clear_table("dmrn_details");
+			var childTable = frm.add_child("dmrn_details");
+			childTable.drawing_no=""
+			cur_frm.refresh_fields("dmrn_details");
+		}
+		if(frm.doc.__islocal){
 			if(frm.doc.originator === undefined){
 				cur_frm.set_value('originator', frappe.session.user);
 			}   

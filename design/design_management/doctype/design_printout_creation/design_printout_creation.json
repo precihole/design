@@ -9,6 +9,7 @@
  "field_order": [
   "naming_series",
   "reference_no",
+  "stock_entry_type",
   "column_break_2",
   "posting_date",
   "section_break_4",
@@ -28,7 +29,7 @@
   {
    "fieldname": "item",
    "fieldtype": "Table",
-   "label": "Print Item",
+   "label": "Items",
    "options": "Design Printout Item"
   },
   {
@@ -62,12 +63,19 @@
    "read_only": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "stock_entry_type",
+   "fieldtype": "Select",
+   "label": "Design Entry Type",
+   "options": "\nDrawing Creation\nDrawing Discard\nDesign Transfer\nDrawing Receipt Confirmation",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-06 11:20:15.768416",
+ "modified": "2022-09-10 15:14:10.983579",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",

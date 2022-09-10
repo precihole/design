@@ -1,7 +1,7 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
- "creation": "2022-08-29 09:40:30.746861",
+ "creation": "2022-09-07 10:30:44.176535",
  "disable_prepared_report": 0,
  "disabled": 0,
  "docstatus": 0,
@@ -48,26 +48,34 @@
    "wildcard_filter": 0
   },
   {
-   "fieldname": "revision",
+   "fieldname": "revision_id",
    "fieldtype": "Data",
-   "label": "Revision",
+   "label": "Revision ID",
    "mandatory": 0,
    "options": "",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Link",
+   "label": "Revision",
+   "mandatory": 1,
+   "options": "Revision",
    "wildcard_filter": 0
   }
  ],
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "Precihole Sports Black Logo",
- "modified": "2022-09-08 10:13:58.247157",
+ "modified": "2022-09-07 11:02:15.080036",
  "modified_by": "Administrator",
  "module": "Design Management",
- "name": "Design Ledger",
+ "name": "Design Ledger Entry",
  "owner": "Administrator",
  "prepared_report": 0,
- "query": "select\n    a.`posting_date` as `Date`,\n    a.`posting_time` as `Time`,\n    a.`item_code` as `Item`,\n    (case\n    when a.`qty_change` > 0 then CONCAT('<p style=\"color:green;\">', ROUND(a.`qty_change`,2), '</p><br />')\n    else 0.00 end) as `In Qty`,\n    (case\n    when a.`qty_change` < 0 then CONCAT('<p style=\"color:red;\">', ROUND(a.`qty_change`,2), '</p><br />')\n    else 0.00 end) as `Out Qty`,\n    CONCAT('<p style=\"color:black;\">', ROUND(a.`qty_after_transaction`,2), '</p><br />')as `Balance Qty`,\n    a.`warehouse` as `Warehouse`,\n    a.`revision_no` as `Revision`,\n    a.`voucher_no` as `Voucher #`,\n    a.`voucher_type` as `Voucher Type`\nfrom `tabDesign Ledger Entry` a\nwhere a.`voucher_no`= %(voucher_no)s and a.`is_cancelled` = 0\norder by a.`posting_date`,a.`posting_time` asc",
+ "query": "select\n    a.`posting_date` as `Date`,\n    a.`posting_time` as `Time`,\n    a.`item_code` as `Item`,\n    (case\n    when a.`qty_change` > 0 then CONCAT('<p style=\"color:green;\">', ROUND(a.`qty_change`,2), '</p><br />')\n    else 0.00 end) as `In Qty`,\n    (case\n    when a.`qty_change` < 0 then CONCAT('<p style=\"color:red;\">', ROUND(a.`qty_change`,2), '</p><br />')\n    else 0.00 end) as `Out Qty`,\n    CONCAT('<p style=\"color:black;\">', ROUND(a.`qty_after_transaction`,2), '</p><br />')as `Balance Qty`,\n    a.`warehouse` as `Warehouse`,\n    a.`revision_id` as `Revision`,\n    a.`revision` as `Revision`,\n    a.`voucher_no` as `Voucher #`,\n    a.`voucher_type` as `Voucher Type`\nfrom `tabDesign Ledger Entry` a\nwhere  a.`revision`= %(revision)s and a.`is_cancelled` = 0\norder by a.`posting_date`,a.`posting_time` asc",
  "ref_doctype": "Design Ledger Entry",
- "report_name": "Design Ledger",
+ "report_name": "Design Ledger Entry",
  "report_type": "Query Report",
  "roles": [
   {

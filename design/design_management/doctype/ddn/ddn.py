@@ -44,7 +44,10 @@ class DDN(Document):
 						"voucher_type":"DDN",
 						"voucher_no":self.name,
 						"qty_change":-i.qty,
-						"qty_after_transaction":bin_doc[0].actual_qty - i.qty
+						"qty_after_transaction":bin_doc[0].actual_qty - i.qty,
+						"revision":i.item_code+"-"+i.revision,
+						"revision_id":i.revision,
+						"revision_no":i.revision
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					ledger_minus_entry.save()
 					ledger_plus_entry = frappe.get_doc({
@@ -56,7 +59,10 @@ class DDN(Document):
 						"voucher_type":"DDN",
 						"voucher_no":self.name,
 						"qty_change":i.qty,
-						"qty_after_transaction":tar_doc[0].actual_qty + i.qty
+						"qty_after_transaction":tar_doc[0].actual_qty + i.qty,
+						"revision":i.item_code+"-"+i.revision,
+						"revision_id":i.revision,
+						"revision_no":i.revision
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					ledger_plus_entry.save()
 				else:
@@ -70,7 +76,10 @@ class DDN(Document):
 						"voucher_type":"DDN",
 						"voucher_no":self.name,
 						"qty_change":-i.qty,
-						"qty_after_transaction":bin_doc[0].actual_qty - i.qty
+						"qty_after_transaction":bin_doc[0].actual_qty - i.qty,
+						"revision":i.item_code+"-"+i.revision,
+						"revision_id":i.revision,
+						"revision_no":i.revision
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					ledger_minus_entry.save()
 					ledger_entry = frappe.get_doc({
@@ -82,7 +91,10 @@ class DDN(Document):
 						"voucher_type":"DDN",
 						"voucher_no":self.name,
 						"qty_change":i.qty,
-						"qty_after_transaction":i.qty
+						"qty_after_transaction":i.qty,
+						"revision":i.item_code+"-"+i.revision,
+						"revision_id":i.revision,
+						"revision_no":i.revision
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					ledger_entry.save()
 	def on_cancel(self):

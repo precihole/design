@@ -1,11 +1,12 @@
 {
  "actions": [],
- "allow_rename": 1,
- "creation": "2022-08-27 10:18:04.013625",
+ "autoname": "naming_series:",
+ "creation": "2022-09-10 12:40:32.372009",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "item_code",
   "posting_date",
   "posting_time",
@@ -16,9 +17,19 @@
   "qty_change",
   "qty_after_transaction",
   "revision_no",
-  "is_cancelled"
+  "is_cancelled",
+  "revision",
+  "revision_id"
  ],
  "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "options": "DLE-.YYYY.-",
+   "reqd": 1
+  },
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
@@ -36,6 +47,13 @@
    "fieldname": "posting_time",
    "fieldtype": "Time",
    "label": "Posting Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Design Warehouse",
    "read_only": 1
   },
   {
@@ -69,6 +87,12 @@
    "read_only": 1
   },
   {
+   "fieldname": "revision_no",
+   "fieldtype": "Data",
+   "label": "Revision No",
+   "read_only": 1
+  },
+  {
    "default": "0",
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
@@ -76,25 +100,24 @@
    "read_only": 1
   },
   {
-   "fieldname": "revision_no",
-   "fieldtype": "Data",
-   "label": "Revision No",
-   "read_only": 1
+   "fieldname": "revision",
+   "fieldtype": "Link",
+   "label": "Revision",
+   "options": "Revision"
   },
   {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "label": "Warehouse",
-   "options": "Design Warehouse",
-   "read_only": 1
+   "fieldname": "revision_id",
+   "fieldtype": "Data",
+   "label": "Revision ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-06 12:42:24.055330",
+ "modified": "2022-09-10 13:07:28.669218",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Ledger Entry",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
