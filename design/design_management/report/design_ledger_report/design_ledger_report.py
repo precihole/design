@@ -28,12 +28,13 @@ def execute(filters=None):
 			if i.revision == result.revision:
 				if result.in_qty:
 					qty_change = result.in_qty
-				elif result.out_qty < 0:
-					actual_qty = frappe.db.get_value('Design Bin', {'warehouse': result.warehouse,'item_code':result.item_code}, ['actual_qty'])
-					qty_change = actual_qty
+					break
+				elif result.out_qty:
+					qty_change = result.out_qty + qty_change
+					break
 				else:
 					qty_change = qty_change + result.qty_change
-				break
+					break
 		result.balance_qty = qty_change
 	# dle = frappe.qb.DocType("Design Ledger Entry")
 	# query = (

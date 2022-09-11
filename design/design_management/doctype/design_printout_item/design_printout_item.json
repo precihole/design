@@ -27,6 +27,7 @@
   {
    "columns": 2,
    "fetch_from": "item_code.revision_c",
+   "fetch_if_empty": 1,
    "fieldname": "revision",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -71,7 +72,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-09-10 15:37:29.179224",
+ "modified": "2022-09-11 12:44:32.769730",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Item",
