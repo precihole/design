@@ -40,34 +40,39 @@ frappe.ui.form.on('Design Printout Creation', {
 		frm.refresh_fields();
 	}
 });
-// frappe.ui.form.on('Design Printout Item', {
-// 	item_add: function(frm) {
-// 		if(frm.doc.stock_entry_type == "Drawing Creation"){
-// 			frm.clear_table("item");
-// 			var childTable = frm.add_child("item");
-// 			childTable.target_warehouse="Design"
-// 			cur_frm.refresh_fields("item");
-// 		}
-// 		else if(frm.doc.stock_entry_type == "Drawing Discard"){
-// 			frm.clear_table("item");
-// 			var childTable = frm.add_child("item");
-// 			childTable.target_warehouse="Scrap"
-// 			cur_frm.refresh_fields("item");
-// 		}
-// 		else if(frm.doc.stock_entry_type == "Design Transfer"){
-// 			var childTable = frm.add_child("item");
-// 			childTable.source_warehouse="Design"
-// 			childTable.target_warehouse="Transit"
-// 			cur_frm.refresh_fields("item");
-// 		}
-// 		else if(frm.doc.stock_entry_type == "Drawing Receipt Confirmation"){
-// 			frm.clear_table("item");
-// 			var childTable = frm.add_child("item");
-// 			childTable.source_warehouse="Transit"
-// 			cur_frm.refresh_fields("item");
-// 		}
-// 	}
-// });
+frappe.ui.form.on('Design Printout Item', {
+	item_add: function(frm) {
+		if(!frm.doc.stock_entry_type){
+			frm.clear_table("item");
+			frm.refresh_fields("item");
+			frappe.msgprint("Select Entry Type First")
+		}
+		if(frm.doc.stock_entry_type == "Drawing Creation"){
+			frm.clear_table("item");
+			var childTable = frm.add_child("item");
+			childTable.target_warehouse="Design"
+			cur_frm.refresh_fields("item");
+		}
+		// else if(frm.doc.stock_entry_type == "Drawing Discard"){
+		// 	frm.clear_table("item");
+		// 	var childTable = frm.add_child("item");
+		// 	childTable.target_warehouse="Scrap"
+		// 	cur_frm.refresh_fields("item");
+		// }
+		// else if(frm.doc.stock_entry_type == "Design Transfer"){
+		// 	var childTable = frm.add_child("item");
+		// 	childTable.source_warehouse="Design"
+		// 	childTable.target_warehouse="Transit"
+		// 	cur_frm.refresh_fields("item");
+		// }
+		// else if(frm.doc.stock_entry_type == "Drawing Receipt Confirmation"){
+		// 	frm.clear_table("item");
+		// 	var childTable = frm.add_child("item");
+		// 	childTable.source_warehouse="Transit"
+		// 	cur_frm.refresh_fields("item");
+		// }
+	}
+});
 // frappe.ui.form.on('Design Printout Item', {
 // 	item_code: function(frm,cdt,cdn) {
 // 		var c = locals[cdt][cdn];

@@ -135,7 +135,15 @@ class DesignPrintoutCreation(Document):
 								+("Available quantity is "+frappe.bold(qty_chk[0].actual_qty)+", you need "+frappe.bold(float(o.qty)))
 								),
 									title=("Insufficient Stock"),
-								)
+							)
+					else:
+						frappe.throw(("Quantity not available for "+frappe.bold(o.item_code)+" in warehouse "+frappe.bold(o.source_warehouse)+" for Revision "+frappe.bold(o.revision)
+							+ "<br><br>"
+							+("Available quantity is "+frappe.bold(0)+", you need "+frappe.bold(float(o.qty)))
+							),
+								title=("Insufficient Stock"),
+						)
+
 	def before_save(self):
 		if self.item:
 			self.set("summary", [])
@@ -150,7 +158,8 @@ class DesignPrintoutCreation(Document):
 				for dle in revision:
 					ledger_entry = frappe.db.get_list('Design Ledger Entry',
 						filters={
-							'revision': dle.name
+							'revision': dle.name,
+							'is_cancelled': 0
 						},
 						fields=['item_code','revision_no','warehouse','sum(qty_change) as qty_change'],
 						order_by='creation desc',
@@ -164,8 +173,8 @@ class DesignPrintoutCreation(Document):
 								'warehouse' : r.warehouse,
 								'actual_qty' : r.qty_change    
 							})
-		else:
-			frappe.msgprint("Item don't have any previous drawing in Stock")
+		# else:
+		# 	frappe.msgprint("Item don't have any previous drawing in Stock")
 		if 	len(self.get("item")) == 0:
 			frappe.throw("Item is Mandatory")
 		if self.stock_entry_type == "Design Transfer" or self.stock_entry_type == "Drawing Discard" or self.stock_entry_type == "Drawing Receipt Confirmation":
@@ -177,8 +186,7 @@ class DesignPrintoutCreation(Document):
 								filters={
 									'item_code': o.item_code,
 									'revision':o.revision,
-									'warehouse':o.source_warehouse,
-									'parent':self.name},
+									'warehouse':o.source_warehouse},
 								fields=['actual_qty']
 						)
 						if qty_chk:
@@ -189,13 +197,13 @@ class DesignPrintoutCreation(Document):
 									),
 										title=("Insufficient Stock"),
 								)
-						else:
-							frappe.throw(("Quantity not available for "+frappe.bold(o.item_code)+" in warehouse "+frappe.bold(o.source_warehouse)+" for Revision "+frappe.bold(o.revision)
-								+ "<br><br>"
-								+("Available quantity is "+frappe.bold(0)+", you need "+frappe.bold(float(o.qty)))
-								),
-									title=("Insufficient Stock"),
-							)
+						# else:
+						# 	frappe.throw(("Quantity not available for "+frappe.bold(o.item_code)+" in warehouse "+frappe.bold(o.source_warehouse)+" for Revision "+frappe.bold(o.revision)
+						# 		+ "<br><br>"
+						# 		+("Available quantity is "+frappe.bold(0)+", you need "+frappe.bold(float(o.qty)))
+						# 		),
+						# 			title=("Insufficient Stock"),
+						# 	)
 						if o.source_warehouse == o.target_warehouse:
 							frappe.throw("Source and Target Department cannot be same")
 	def on_cancel(self):
