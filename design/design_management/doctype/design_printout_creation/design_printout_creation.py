@@ -178,9 +178,9 @@ class DesignPrintoutCreation(Document):
 		if 	len(self.get("item")) == 0:
 			frappe.throw("Item is Mandatory")
 		# if self.stock_entry_type == "Design Transfer" or self.stock_entry_type == "Drawing Discard" or self.stock_entry_type == "Drawing Receipt Confirmation":
-		# 	if self.item:
+		if self.item:
 		# 	#check revision qty is available or not in stock
-		# 		for o in self.item:
+			for o in self.item:
 		# 			if o.source_warehouse:
 		# 				qty_chk = frappe.db.get_list('Revision Stock Summary',
 		# 						filters={
@@ -204,8 +204,8 @@ class DesignPrintoutCreation(Document):
 						# 		),
 						# 			title=("Insufficient Stock"),
 						# 	)
-						if o.source_warehouse == o.target_warehouse:
-							frappe.throw("Source and Target Department cannot be same")
+				if o.source_warehouse == o.target_warehouse:
+					frappe.throw("Source and Target Department cannot be same")
 	def on_cancel(self):
 		for i in self.item:
 			lst_doc = frappe.db.get_all('Design Ledger Entry',filters={'voucher_no': self.name,'is_cancelled': 0},fields=['name','item_code','warehouse','qty_change'])
