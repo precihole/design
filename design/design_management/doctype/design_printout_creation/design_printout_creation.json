@@ -77,8 +77,7 @@
    "fieldname": "summary",
    "fieldtype": "Table",
    "label": "Summary",
-   "options": "Revision Stock Summary",
-   "read_only": 1
+   "options": "Revision Stock Summary"
   },
   {
    "fieldname": "section_break_8",
@@ -88,7 +87,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-11 15:32:30.359892",
+ "modified": "2022-09-11 16:39:13.727202",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",
