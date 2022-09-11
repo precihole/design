@@ -47,12 +47,12 @@ frappe.ui.form.on('Design Printout Item', {
 			frm.refresh_fields("item");
 			frappe.msgprint("Select Entry Type First")
 		}
-		if(frm.doc.stock_entry_type == "Drawing Creation"){
-			frm.clear_table("item");
-			var childTable = frm.add_child("item");
-			childTable.target_warehouse="Design"
-			cur_frm.refresh_fields("item");
-		}
+		// if(frm.doc.stock_entry_type == "Drawing Creation"){
+		// 	frm.clear_table("item");
+		// 	var childTable = frm.add_child("item");
+		// 	childTable.target_warehouse="Design"
+		// 	cur_frm.refresh_fields("item");
+		// }
 		// else if(frm.doc.stock_entry_type == "Drawing Discard"){
 		// 	frm.clear_table("item");
 		// 	var childTable = frm.add_child("item");
