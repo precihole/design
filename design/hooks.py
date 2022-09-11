@@ -2,9 +2,9 @@ from . import __version__ as app_version
 
 app_name = "design"
 app_title = "Design Management"
-app_publisher = "Rehan Ansari"
+app_publisher = "Precihole"
 app_description = "for design department"
-app_email = "rehan@preciholesports.com"
+app_email = "erpadmin@preciholesports.com"
 app_license = "MIT"
 
 # Includes in <head>
