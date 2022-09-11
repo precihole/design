@@ -120,7 +120,7 @@ class DesignPrintoutCreation(Document):
 			#check revision qty is available or not in stock
 			for o in self.item:
 				if o.source_warehouse:
-					qty_chk = frappe.db.get_list('Revision Stock Summary',
+					qty_chk = frappe.db.get_all('Revision Stock Summary',
 							filters={
 								'item_code': o.item_code,
 								'revision':o.revision,
