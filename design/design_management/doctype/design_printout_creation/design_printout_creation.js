@@ -34,10 +34,34 @@ frappe.ui.form.on('Design Printout Creation', {
 		}
 	}
 });
+// frappe.ui.form.on('Design Printout Item', {
+// 	after_save : function(frm,cdt,cdn){
+// 		var child = locals[cdt][cdn];
+// 		var revison = child.revision;
+// 		frappe.msgprint(revison)
+// 		// var revision_validate = new RegExp("(^[A-Z]{1}[0-9]{1})$");
+// 		// if (revision_validate.test(revison) === false){
+// 		// 	frappe.msgprint(__("Incorrect Revision No"));
+// 		// 	frappe.validated = false;
+// 		// }
+// 	}
+// });
+frappe.ui.form.on('Design Printout Creation', {
+	validate: function(frm) {
+		$.each(frm.doc.item || [], function(i, d) {
+			var revision = d.revision;
+			var revision_validate = new RegExp("(^[A-Z]{1}[0-9]{1,2})$");
+			if(revision_validate.test(revision) === false){
+				msgprint("<b>Incorrect Revision No</b>");
+				frappe.validated = false;
+			}
+		})
+	}
+});
 frappe.ui.form.on('Design Printout Creation', {
 	stock_entry_type: function(frm) {
 		frm.clear_table("item");
-		frm.refresh_fields();
+		frm.refresh_fields();	
 	}
 });
 frappe.ui.form.on('Design Printout Item', {

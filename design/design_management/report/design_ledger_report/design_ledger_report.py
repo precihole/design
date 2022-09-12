@@ -14,8 +14,6 @@ def execute(filters=None):
 	# Then, for fun, let's define a new property programmatically
 	qty_change=0
 	for result in design_ledger:
-		if from_date := filters.get("from_date"):
-			j
 		if result.qty_change > 0:
 			result.in_qty = result.qty_change
 		else:
@@ -30,7 +28,19 @@ def execute(filters=None):
 					qty_change = result.in_qty
 					break
 				elif result.out_qty:
-					qty_change = result.out_qty + qty_change
+					if i.voucher_no == result.voucher_no:
+						ledger_entry = frappe.db.get_list('Design Ledger Entry',
+							filters={
+								'revision': i.revision,
+								'is_cancelled': 0,
+								'warehouse': i.warehouse
+							},
+							fields=['item_code','revision_no','warehouse','qty_after_transaction'],
+							order_by='creation desc',
+						)
+						qty_change = ledger_entry[0].qty_after_transaction
+					else:
+						qty_change = result.out_qty + qty_change
 					break
 				else:
 					qty_change = qty_change + result.qty_change
