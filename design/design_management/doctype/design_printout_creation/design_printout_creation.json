@@ -16,7 +16,8 @@
   "item",
   "section_break_8",
   "summary",
-  "amended_from"
+  "amended_from",
+  "status"
  ],
  "fields": [
   {
@@ -32,7 +33,8 @@
    "fieldname": "item",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Design Printout Item"
+   "options": "Design Printout Item",
+   "reqd": 1
   },
   {
    "fieldname": "reference_no",
@@ -56,12 +58,13 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "DT-.YYYY.-",
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Series",
    "no_copy": 1,
-   "options": "DPC-.YYYY.-",
+   "options": "DT-.YYYY.-\nDT-REC-.YYYY.-\nDT-RT-.YYYY.-\nDT-DC-.YYYY.-\nDT-CN-.YYYY.-",
    "read_only": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -70,7 +73,7 @@
    "fieldname": "stock_entry_type",
    "fieldtype": "Select",
    "label": "Design Entry Type",
-   "options": "\nDrawing Creation\nDrawing Discard\nDesign Transfer\nDrawing Receipt Confirmation",
+   "options": "\nDrawing Creation\nDrawing Transfer\nDrawing Receipt\nDrawing Return\nDrawing Discard",
    "reqd": 1
   },
   {
@@ -82,12 +85,20 @@
   {
    "fieldname": "section_break_8",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nTo Receive and Return",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-11 16:39:13.727202",
+ "modified": "2022-09-13 12:39:59.382017",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",

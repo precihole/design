@@ -2,8 +2,28 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Design Printout Creation', {
+	show_progress_for_items: function(frm) {
+		var bars = [];
+		var message = '';
+		var added_min = false;
+
+		// produced qty
+		var title = __('Drawing Transferred', [10]);
+		bars.push({
+			'title': title,
+			'width': (50) + '%',
+			'progress_class': 'progress-bar-inverse'
+		});
+		message = title;
+		frm.dashboard.add_progress(__('Status'), bars, message);
+	},
+	//refresh
 	refresh: function(frm) {
+	
+		frm.trigger("show_progress_for_items");
+
 		if(frm.doc.docstatus == 1){
+			
 			frm.add_custom_button(__('Stock Ledger'), function() {
 				frappe.route_options = {
 					"voucher_no": frm.doc.name
@@ -30,7 +50,6 @@ frappe.ui.form.on('Design Printout Creation', {
 					});
 				frm.refresh_field("item");
 			});
-			
 		}
 	}
 });
@@ -83,10 +102,15 @@ frappe.ui.form.on('Design Printout Item', {
 		// 	childTable.target_warehouse="Scrap"
 		// 	cur_frm.refresh_fields("item");
 		// }
-		// else if(frm.doc.stock_entry_type == "Design Transfer"){
+		if(frm.doc.stock_entry_type == "Design Transfer"){
+			frm.clear_table("item");
+			var childTable = frm.add_child("item");
+			childTable.source_warehouse="Design"
+			cur_frm.refresh_fields("item");
+		}
+		//else{
 		// 	var childTable = frm.add_child("item");
 		// 	childTable.source_warehouse="Design"
-		// 	childTable.target_warehouse="Transit"
 		// 	cur_frm.refresh_fields("item");
 		// }
 		// else if(frm.doc.stock_entry_type == "Drawing Receipt Confirmation"){

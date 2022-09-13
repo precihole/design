@@ -36,7 +36,7 @@ def execute(filters=None):
 								'warehouse': i.warehouse
 							},
 							fields=['item_code','revision_no','warehouse','qty_after_transaction'],
-							order_by='creation desc',
+							order_by='creation asc',
 						)
 						qty_change = ledger_entry[0].qty_after_transaction
 					else:
