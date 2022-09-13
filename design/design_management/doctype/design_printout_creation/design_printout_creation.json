@@ -90,15 +90,19 @@
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nDraft\nTo Receive and Return",
-   "read_only": 1
+   "no_copy": 1,
+   "options": "\nDraft\nTo Receive and Return\nTo Return\nCompleted\nCancelled",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-13 12:39:59.382017",
+ "modified": "2022-09-13 17:21:14.662697",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",

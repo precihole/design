@@ -19,7 +19,27 @@ class DesignPrintoutCreation(Document):
 	def on_submit(self):
 		#only dle in created on submit
 		#Note:Bin Entry created on insert of dle
-		self.create_dle_entry()
+		if self.item:
+			for i in self.item:
+				if self.stock_entry_type == "Drawing Creation":
+					target = i.target_warehouse
+					self.produce_dle_entry(i,target)
+				elif self.stock_entry_type == 'Drawing Transfer':
+					source = i.source_warehouse
+					target = 'Transit'
+					self.create_dle_entry(i,source,target)
+				elif self.stock_entry_type == 'Drawing Receipt':
+					source = 'Transit'
+					target = i.target_warehouse
+					self.create_dle_entry(i,source,target)
+				elif self.stock_entry_type == 'Drawing Return':
+					source = i.source_warehouse
+					target = 'Transit'
+					self.create_dle_entry(i,source,target)
+				elif self.stock_entry_type == 'Drawing Receipt':
+					source = i.source_warehouse
+					target = i.target_warehouse
+					self.create_dle_entry(i,source,target)
 
 	def on_cancel(self):
 		self.cancel_dle_entry()
@@ -125,59 +145,52 @@ class DesignPrintoutCreation(Document):
 								})
 	def status_update(self):
 		self.status = 'To Receive and Return'
-
-	def create_dle_entry(self):
-		if self.item:
-			for i in self.item:
-				source_ware_bin = frappe.db.get_all('Design Bin',
-						filters={
-							'item_code': i.item_code,
-							'warehouse':i.source_warehouse
-						},
-						fields=['name','actual_qty'])
-				target_ware_bin = frappe.db.get_all('Design Bin',
-						filters={
-							'item_code': i.item_code,
-							'warehouse':i.target_warehouse
-						},
-						fields=['name','actual_qty'])
-				if self.stock_entry_type == ('Drawing Transfer' or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt'):
-					#two cases for dle
-					#1. If Target Bin already then already_qty + current_qty
-					#2. If Target Bin not available then current_qty
-					if source_ware_bin and target_ware_bin:
-						self.dle_entry(i,source_ware_bin,target_ware_bin)
-					elif source_ware_bin:
-						self.dle_entry(i,source_ware_bin,None)
-				elif self.stock_entry_type == "Drawing Creation":
-					if i.qty > 0:
-						if target_ware_bin:
-							self.dle_entry(i,None,target_ware_bin)
-						else:
-							self.dle_entry(i,None,None)
-					#just for backup Cos validation on ui is already there
-					elif i.qty == 0:
-						frappe.throw("Qty cannot be 0")
 	
-	def dle_entry(self,i,source_ware_bin,target_ware_bin):
-		if not source_ware_bin == None:
+	def produce_dle_entry(self,i,target):
+		#Qty Produce
+		target_ware_bin = frappe.db.get_all('Design Bin',
+				filters={
+					'item_code': i.item_code,
+					'warehouse': target
+				},
+				fields=['name','actual_qty','warehouse'])
+		if i.qty > 0:
+			if target_ware_bin:
+				self.dle_entry(i,None,target_ware_bin,None)
+			else:
+				self.dle_entry(i,None,None,None)
+		#just for backup Cos validation on ui is already there
+		elif i.qty == 0:
+			frappe.throw("Qty cannot be 0")
+
+	def create_dle_entry(self,i,source,target):
+		#Qty Transfer
+		#or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt':
+		source_ware_bin = frappe.db.get_all('Design Bin',
+				filters={
+					'item_code': i.item_code,
+					'warehouse': source
+				},
+				fields=['name','actual_qty','warehouse'])
+		target_ware_bin = frappe.db.get_all('Design Bin',
+				filters={
+					'item_code': i.item_code,
+					'warehouse': target
+				},
+				fields=['name','actual_qty','warehouse'])
+		#two cases for dle
+		#1. If Target Bin already then already_qty + current_qty
+		#2. If Target Bin not available then current_qty
+		if source_ware_bin and target_ware_bin:
+			self.dle_entry(i,source_ware_bin,target_ware_bin,None)
+		elif source_ware_bin:
+			self.dle_entry(i,source_ware_bin,None,target)
+
+	
+	def dle_entry(self,i,source_ware_bin,target_ware_bin,target):
+		#for creation entry
+		if source_ware_bin == None and target_ware_bin == None:
 			minus_dle_entry = frappe.get_doc({
-				"doctype":"Design Ledger Entry",
-				"item_code":i.item_code,
-				"warehouse":i.source_warehouse,
-				"posting_date":frappe.utils.nowdate(),
-				"posting_time":frappe.utils.nowtime(),
-				"voucher_type":"Design Printout Creation",
-				"voucher_no":self.name,
-				"qty_change":-i.qty,
-				"qty_after_transaction":source_ware_bin[0].actual_qty - i.qty,
-				"revision":i.item_code+"-"+i.revision,
-				"revision_id":i.revision,
-				"revision_no":i.revision
-			}).insert(ignore_permissions=True,ignore_mandatory=True)
-			minus_dle_entry.save()
-		if target_ware_bin == None:
-			plus_dle_entry = frappe.get_doc({
 				"doctype":"Design Ledger Entry",
 				"item_code":i.item_code,
 				"warehouse":i.target_warehouse,
@@ -191,23 +204,56 @@ class DesignPrintoutCreation(Document):
 				"revision_id":i.revision,
 				"revision_no":i.revision
 			}).insert(ignore_permissions=True,ignore_mandatory=True)
-			plus_dle_entry.save()
+			minus_dle_entry.save()
 		else:
-			plus_dle_entry = frappe.get_doc({
-				"doctype":"Design Ledger Entry",
-				"item_code":i.item_code,
-				"warehouse":i.target_warehouse,
-				"posting_date":frappe.utils.nowdate(),
-				"posting_time":frappe.utils.nowtime(),
-				"voucher_type":"Design Printout Creation",
-				"voucher_no":self.name,
-				"qty_change":i.qty, #qty to be plus
-				"qty_after_transaction":target_ware_bin[0].actual_qty + i.qty, #plus qty in target
-				"revision":i.item_code+"-"+i.revision,
-				"revision_id":i.revision,
-				"revision_no":i.revision
-			}).insert(ignore_permissions=True,ignore_mandatory=True)
-			plus_dle_entry.save()
+			if not source_ware_bin == None:
+				minus_dle_entry = frappe.get_doc({
+					"doctype":"Design Ledger Entry",
+					"item_code":i.item_code,
+					"warehouse":source_ware_bin[0].warehouse,
+					"posting_date":frappe.utils.nowdate(),
+					"posting_time":frappe.utils.nowtime(),
+					"voucher_type":"Design Printout Creation",
+					"voucher_no":self.name,
+					"qty_change":-i.qty,
+					"qty_after_transaction":source_ware_bin[0].actual_qty - i.qty,
+					"revision":i.item_code+"-"+i.revision,
+					"revision_id":i.revision,
+					"revision_no":i.revision
+				}).insert(ignore_permissions=True,ignore_mandatory=True)
+				minus_dle_entry.save()
+			if target_ware_bin == None:
+				plus_dle_entry = frappe.get_doc({
+					"doctype":"Design Ledger Entry",
+					"item_code":i.item_code,
+					"warehouse":target,
+					"posting_date":frappe.utils.nowdate(),
+					"posting_time":frappe.utils.nowtime(),
+					"voucher_type":"Design Printout Creation",
+					"voucher_no":self.name,
+					"qty_change":i.qty,
+					"qty_after_transaction":i.qty,
+					"revision":i.item_code+"-"+i.revision,
+					"revision_id":i.revision,
+					"revision_no":i.revision
+				}).insert(ignore_permissions=True,ignore_mandatory=True)
+				plus_dle_entry.save()
+			else:
+				plus_dle_entry = frappe.get_doc({
+					"doctype":"Design Ledger Entry",
+					"item_code":i.item_code,
+					"warehouse":target_ware_bin[0].warehouse,
+					"posting_date":frappe.utils.nowdate(),
+					"posting_time":frappe.utils.nowtime(),
+					"voucher_type":"Design Printout Creation",
+					"voucher_no":self.name,
+					"qty_change":i.qty, #qty to be plus
+					"qty_after_transaction":target_ware_bin[0].actual_qty + i.qty, #plus qty in target
+					"revision":i.item_code+"-"+i.revision,
+					"revision_id":i.revision,
+					"revision_no":i.revision
+				}).insert(ignore_permissions=True,ignore_mandatory=True)
+				plus_dle_entry.save()
 
 	def cancel_dle_entry(self):
 		for i in self.item:
