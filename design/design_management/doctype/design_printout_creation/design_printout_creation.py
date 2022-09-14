@@ -7,6 +7,7 @@ from frappe.model.document import Document
 class DesignPrintoutCreation(Document):
 	def before_insert(self):
 		self.set_series()
+		self.clear_receipt_ref()
 
 	def before_save(self):
 		self.set_series() #series
@@ -43,6 +44,10 @@ class DesignPrintoutCreation(Document):
 
 	def on_cancel(self):
 		self.cancel_dle_entry()
+
+	def clear_receipt_ref(self):
+		if self.stock_entry_type == 'Drawing Return':
+			self.drawing_receipt = ''
 						
 	def set_series(self):
 		if self.stock_entry_type == 'Drawing Creation':
@@ -144,7 +149,21 @@ class DesignPrintoutCreation(Document):
 									'actual_qty' : r.qty_change    
 								})
 	def status_update(self):
-		self.status = 'To Receive and Return'
+		if self.stock_entry_type == 'Drawing Transfer':
+			self.status = 'To Receive and Return'
+		elif self.stock_entry_type == 'Drawing Creation':
+			self.status = 'Created'
+		elif self.stock_entry_type == 'Drawing Receipt' and not self.drawing_return:
+			self.status = 'Recevied'
+			frappe.db.set_value('Design Printout Creation', self.drawing_transfer, 'status', 'To Return')
+		elif self.stock_entry_type == 'Drawing Return':
+			self.status = 'Returned'
+			for i in self.item[:1]:
+				frappe.db.set_value('Design Printout Creation', i.drawing_transfer, 'status', 'To Return Receive')
+		elif self.stock_entry_type == 'Drawing Receipt' and self.drawing_return:
+			self.status = 'Recevied'
+			for j in self.item[:1]:
+				frappe.db.set_value('Design Printout Creation', j.drawing_transfer, 'status', 'Completed')
 	
 	def produce_dle_entry(self,i,target):
 		#Qty Produce

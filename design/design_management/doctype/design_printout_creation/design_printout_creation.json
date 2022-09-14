@@ -17,7 +17,10 @@
   "section_break_8",
   "summary",
   "amended_from",
-  "status"
+  "status",
+  "drawing_transfer",
+  "drawing_receipt",
+  "drawing_return"
  ],
  "fields": [
   {
@@ -44,6 +47,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -64,7 +68,7 @@
    "in_list_view": 1,
    "label": "Series",
    "no_copy": 1,
-   "options": "DT-.YYYY.-\nDT-REC-.YYYY.-\nDT-RT-.YYYY.-\nDT-DC-.YYYY.-\nDT-CN-.YYYY.-",
+   "options": "\nDT-.YYYY.-\nDT-REC-.YYYY.-\nDT-RT-.YYYY.-\nDT-DC-.YYYY.-\nDT-CN-.YYYY.-",
    "read_only": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -72,6 +76,7 @@
   {
    "fieldname": "stock_entry_type",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Design Entry Type",
    "options": "\nDrawing Creation\nDrawing Transfer\nDrawing Receipt\nDrawing Return\nDrawing Discard",
    "reqd": 1
@@ -93,16 +98,37 @@
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "\nDraft\nTo Receive and Return\nTo Return\nCompleted\nCancelled",
+   "options": "\nDraft\nCreated\nTo Receive and Return\nRecevied\nReturned\nTo Return\nTo Return Receive\nCompleted\nCancelled",
    "read_only": 1,
    "reqd": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "drawing_transfer",
+   "fieldtype": "Link",
+   "label": "Drawing Transfer",
+   "options": "Design Printout Creation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "drawing_receipt",
+   "fieldtype": "Link",
+   "label": "Drawing Receipt",
+   "options": "Design Printout Creation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "drawing_return",
+   "fieldtype": "Link",
+   "label": "Drawing Return",
+   "options": "Design Printout Creation",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-13 17:21:14.662697",
+ "modified": "2022-09-14 12:33:07.472676",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",

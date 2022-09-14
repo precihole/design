@@ -13,7 +13,8 @@
   "section_break_2",
   "items",
   "data",
-  "amended_from"
+  "amended_from",
+  "f_name"
  ],
  "fields": [
   {
@@ -60,12 +61,17 @@
    "read_only": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "f_name",
+   "fieldtype": "Data",
+   "label": "test"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-06 16:00:53.373151",
+ "modified": "2022-09-14 09:36:44.136657",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DDN",

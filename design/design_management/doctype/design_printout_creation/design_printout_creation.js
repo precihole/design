@@ -30,6 +30,36 @@ frappe.ui.form.on('Design Printout Creation', {
 				};
 				frappe.set_route("query-report", "Design Ledger Report");
 			}, __("View"));
+			//Receipt Button
+			if (frm.doc.stock_entry_type == 'Drawing Transfer'){
+				frm.add_custom_button(__('Drawing Receipt'), function() {
+					frappe.route_options = {
+						"drawing_transfer": frm.doc.name,
+						'stock_entry_type': 'Drawing Receipt'
+					};
+					frappe.set_route('Form','Design Printout Creation', "new-design-printout-creation-1");
+				});
+			}
+			//Return Button
+			if (frm.doc.stock_entry_type == 'Drawing Receipt'){
+				frm.add_custom_button(__('Drawing Return'), function() {
+					frappe.route_options = {
+						"drawing_receipt": frm.doc.name,
+						'stock_entry_type': 'Drawing Return'
+					};
+					frappe.set_route('Form','Design Printout Creation', "new-design-printout-creation-1");
+				});
+			}
+			//Receipt WHEN Return Button
+			if (frm.doc.stock_entry_type == 'Drawing Return'){
+				frm.add_custom_button(__('Drawing Return Receipt'), function() {
+					frappe.route_options = {
+						"drawing_return": frm.doc.name,
+						'stock_entry_type': 'Drawing Receipt'
+					};
+					frappe.set_route('Form','Design Printout Creation', "new-design-printout-creation-1");
+				});
+			}
 		}
 		// if(frm.doc.docstatus == 1){
 		// 	cur_frm.add_custom_button(__("Create Design Transfer"), function() {
@@ -49,6 +79,60 @@ frappe.ui.form.on('Design Printout Creation', {
 					i.revision = d.rev_no
 					});
 				frm.refresh_field("item");
+			});
+		}
+		//Receipt 
+		if(frm.doc.__islocal && frm.doc.drawing_transfer){
+			//cur_frm.set_value('stock_entry_type','Drawing Receipt');
+			frappe.model.with_doc("Design Printout Creation", frm.doc.drawing_transfer, function() {
+				var mcd = frappe.model.get_doc("Design Printout Creation", frm.doc.drawing_transfer);
+				frm.clear_table("item");
+					$.each(mcd.item, function(i, d) {
+					i = frm.add_child("item");
+					i.source_warehouse = d.target_warehouse
+					i.target_warehouse = d.source_warehouse
+					i.item_code = d.item_code
+					i.revision=d.revision
+					i.qty = d.qty
+					i.drawing_transfer = d.parent
+					});
+				frm.refresh_field("item");
+			});
+		}
+		if(frm.doc.__islocal && frm.doc.drawing_receipt){
+			//cur_frm.set_value('stock_entry_type','Drawing Receipt');
+			frappe.model.with_doc("Design Printout Creation", frm.doc.drawing_receipt, function() {
+				var mcd = frappe.model.get_doc("Design Printout Creation", frm.doc.drawing_receipt);
+				frm.clear_table("item");
+					$.each(mcd.item, function(i, d) {
+					i = frm.add_child("item");
+					i.source_warehouse = d.target_warehouse
+					i.target_warehouse = d.source_warehouse
+					i.item_code = d.item_code
+					i.revision=d.revision
+					i.qty = d.qty
+					i.drawing_transfer = d.drawing_transfer
+					i.drawing_receipt = d.parent
+					});
+				frm.refresh_field("item");
+			});
+		}
+		if(frm.doc.__islocal && frm.doc.drawing_return){
+			//cur_frm.set_value('stock_entry_type','Drawing Receipt');
+			frappe.model.with_doc("Design Printout Creation", frm.doc.drawing_return, function() {
+				var mcd = frappe.model.get_doc("Design Printout Creation", frm.doc.drawing_return);
+				frm.clear_table("item");
+					$.each(mcd.item, function(i, d) {
+					i = frm.add_child("item");
+					i.source_warehouse = d.target_warehouse
+					i.target_warehouse = d.source_warehouse
+					i.item_code = d.item_code
+					i.revision=d.revision
+					i.qty = d.qty
+					i.drawing_transfer = d.drawing_transfer
+					i.drawing_return = d.parent
+					});
+				frm.refresh_field("item");	
 			});
 		}
 	}
