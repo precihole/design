@@ -9,7 +9,6 @@ frappe.ui.form.on('Print Doc', {
 			method:'design.design_management.doctype.print_doc.print_doc.get_printer_list',
 			callback:function(res){
 				if(res.message !== undefined){
-					console
 					var responseData = res.message.data
 					const defaultPrinter = responseData[0]
 					const systemPrinter = defaultPrinter.split(" ").pop()
@@ -20,6 +19,19 @@ frappe.ui.form.on('Print Doc', {
 					frm.set_df_property('printer_list', 'options', printerList);
 					frm.set_value('default',systemPrinter)
 					frm.refresh_field("printer_list","default_printer");
+				}
+			}
+		})
+	}
+});
+frappe.ui.form.on('Print Doc', {
+	check_status: function(frm) {
+		frappe.call({
+			async:false,
+			method:'design.design_management.doctype.print_doc.print_doc.get_printer_status',
+			callback:function(res){
+				if(res.message !== undefined){
+					frappe.msgprint(res.message.data[0])
 				}
 			}
 		})

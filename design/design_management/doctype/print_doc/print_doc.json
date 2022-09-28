@@ -8,7 +8,12 @@
  "field_order": [
   "test",
   "printer_list",
-  "default"
+  "default",
+  "column_break_4",
+  "check_status",
+  "section_break_6",
+  "attact",
+  "child"
  ],
  "fields": [
   {
@@ -26,11 +31,35 @@
    "fieldtype": "Data",
    "label": "default",
    "read_only": 1
+  },
+  {
+   "fieldname": "attact",
+   "fieldtype": "Attach",
+   "label": "attact"
+  },
+  {
+   "fieldname": "child",
+   "fieldtype": "Table",
+   "label": "child",
+   "options": "childTest"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "check_status",
+   "fieldtype": "Button",
+   "label": "Check Status"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-27 17:39:00.129241",
+ "modified": "2022-09-28 12:11:23.843575",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Print Doc",
