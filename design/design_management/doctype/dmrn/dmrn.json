@@ -16,6 +16,7 @@
   "originator_name",
   "to_department",
   "type_of_modification",
+  "remarks",
   "reference_no",
   "dmrn_details_section",
   "dmrn_details",
@@ -104,12 +105,18 @@
    "read_only": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-06 10:21:40.204220",
+ "modified": "2022-10-06 14:43:20.219756",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",

@@ -2,17 +2,24 @@
 # For license information, please see license.txt
 
 import frappe
+import os
+import subprocess, sys
+import tempfile
 from frappe.model.document import Document
+from PyPDF2 import PdfFileWriter, PdfFileReader
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 class DesignPrintoutCreation(Document):
 	def before_insert(self):
 		self.set_series()
-		self.clear_receipt_ref()
+		# self.clear_receipt_ref()
 
 	def before_save(self):
 		self.set_series() #series
 		self.custom_validation() #all validations
-		self.item_stock_summary() #summary
+		#self.item_stock_summary() #summary
 
 	def before_submit(self):
 		self.status_update()
@@ -22,32 +29,32 @@ class DesignPrintoutCreation(Document):
 		#Note:Bin Entry created on insert of dle
 		if self.item:
 			for i in self.item:
-				if self.stock_entry_type == "Drawing Creation":
-					target = i.target_warehouse
+				if self.stock_entry_type == 'Drawing Transfer':
+					target = i.source_warehouse
 					self.produce_dle_entry(i,target)
-				elif self.stock_entry_type == 'Drawing Transfer':
 					source = i.source_warehouse
 					target = 'Transit'
 					self.create_dle_entry(i,source,target)
-				elif self.stock_entry_type == 'Drawing Receipt':
-					source = 'Transit'
-					target = i.target_warehouse
-					self.create_dle_entry(i,source,target)
-				elif self.stock_entry_type == 'Drawing Return':
-					source = i.source_warehouse
-					target = 'Transit'
-					self.create_dle_entry(i,source,target)
-				elif self.stock_entry_type == 'Drawing Receipt':
-					source = i.source_warehouse
-					target = i.target_warehouse
-					self.create_dle_entry(i,source,target)
+		self.print_doc(i)
+				# elif self.stock_entry_type == 'Drawing Receipt':
+				# 	source = 'Transit'
+				# 	target = i.target_warehouse
+				# 	self.create_dle_entry(i,source,target)
+				# elif self.stock_entry_type == 'Drawing Return':
+				# 	source = i.source_warehouse
+				# 	target = 'Transit'
+				# 	self.create_dle_entry(i,source,target)
+				# elif self.stock_entry_type == 'Drawing Receipt':
+				# 	source = i.source_warehouse
+				# 	target = i.target_warehouse
+				# 	self.create_dle_entry(i,source,target)
 
 	def on_cancel(self):
 		self.cancel_dle_entry()
 
-	def clear_receipt_ref(self):
-		if self.stock_entry_type == 'Drawing Return':
-			self.drawing_receipt = ''
+	# def clear_receipt_ref(self):
+	# 	if self.stock_entry_type == 'Drawing Return':
+	# 		self.drawing_receipt = ''
 						
 	def set_series(self):
 		if self.stock_entry_type == 'Drawing Creation':
@@ -64,52 +71,52 @@ class DesignPrintoutCreation(Document):
 	def custom_validation(self):
 		if self.item:
 			for o in self.item:
-				#warehouse validate
+				#same warehouse validation
 				if o.source_warehouse == o.target_warehouse:
 					frappe.throw("Source and target warehouse cannot be same for row "+str(o.idx))
 				
-				#qty 0 validate
+				#qty cannot be 0 validation
 				if o.qty == 0:
 					frappe.throw("Row "+(str(o.idx)+": Qty is mandatory"
 						),
 							title=("Zero quantity"),
 					)
-				
-				#in stock qty validate
-				if self.stock_entry_type == ('Drawing Transfer' or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt'):
-					if o.source_warehouse:
-						qty_chk = frappe.db.get_all('Revision Stock Summary',
-								filters={
-									'item_code': o.item_code,
-									'revision':o.revision,
-									'warehouse':o.source_warehouse},
-								fields=['actual_qty']
-						)
-						if qty_chk:
-							if o.qty > qty_chk[0].actual_qty:
-								frappe.throw(("Quantity not available for "
-									+frappe.bold(o.item_code)
-									+" in warehouse "+frappe.bold(o.source_warehouse)
-									+" for Revision "+frappe.bold(o.revision)
-									+ "<br><br>"
-									+("Available quantity is "+frappe.bold(qty_chk[0].actual_qty)
-									+", you need "+frappe.bold(float(o.qty)))
-									),
-										title=("Insufficient Stock"),
-								)
-						else:
-							#if not islocal
-							if not self.is_new():
-								frappe.throw(("Quantity not available for "
-									+frappe.bold(o.item_code)
-									+" in warehouse "+frappe.bold(o.source_warehouse)
-									+" for Revision "+frappe.bold(o.revision)
-									+ "<br><br>"
-									+("Available quantity is "+frappe.bold(0)
-									+", you need "+frappe.bold(float(o.qty)))
-									),
-										title=("Insufficient Stock"),
-								)
+	# 			#in stock qty validate
+	# 			if self.stock_entry_type == ('Drawing Transfer' or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt'):
+	# 				if o.source_warehouse:
+	# 					#Child Table
+	# 					qty_chk = frappe.db.get_all('Revision Stock Summary',
+	# 							filters={
+	# 								'item_code': o.item_code,
+	# 								'revision':o.revision,
+	# 								'warehouse':o.source_warehouse},
+	# 							fields=['actual_qty']
+	# 					)
+	# 					if qty_chk:
+	# 						if o.qty > qty_chk[0].actual_qty:
+	# 							frappe.throw(("Quantity not available for "
+	# 								+frappe.bold(o.item_code)
+	# 								+" in warehouse "+frappe.bold(o.source_warehouse)
+	# 								+" for Revision "+frappe.bold(o.revision)
+	# 								+ "<br><br>"
+	# 								+("Available quantity is "+frappe.bold(qty_chk[0].actual_qty)
+	# 								+", you need "+frappe.bold(float(o.qty)))
+	# 								),
+	# 									title=("Insufficient Stock"),
+	# 							)
+	# 					else:
+	# 						#if not islocal
+	# 						if not self.is_new():
+	# 							frappe.throw(("Quantity not available for "
+	# 								+frappe.bold(o.item_code)
+	# 								+" in warehouse "+frappe.bold(o.source_warehouse)
+	# 								+" for Revision "+frappe.bold(o.revision)
+	# 								+ "<br><br>"
+	# 								+("Available quantity is "+frappe.bold(0)
+	# 								+", you need "+frappe.bold(float(o.qty)))
+	# 								),
+	# 									title=("Insufficient Stock"),
+	# 							)
 	def item_stock_summary(self):
 		unique_list = []
 		if self.item:
@@ -179,8 +186,8 @@ class DesignPrintoutCreation(Document):
 			else:
 				self.dle_entry(i,None,None,None)
 		#just for backup Cos validation on ui is already there
-		elif i.qty == 0:
-			frappe.throw("Qty cannot be 0")
+		# elif i.qty == 0:
+		# 	frappe.throw("Qty cannot be 0")
 
 	def create_dle_entry(self,i,source,target):
 		#Qty Transfer
@@ -212,7 +219,7 @@ class DesignPrintoutCreation(Document):
 			minus_dle_entry = frappe.get_doc({
 				"doctype":"Design Ledger Entry",
 				"item_code":i.item_code,
-				"warehouse":i.target_warehouse,
+				"warehouse":i.source_warehouse,
 				"posting_date":frappe.utils.nowdate(),
 				"posting_time":frappe.utils.nowtime(),
 				"voucher_type":"Design Printout Creation",
@@ -273,6 +280,45 @@ class DesignPrintoutCreation(Document):
 					"revision_no":i.revision
 				}).insert(ignore_permissions=True,ignore_mandatory=True)
 				plus_dle_entry.save()
+	def print_doc(self,i):
+		if self.item:
+			for i in self.item:
+				if i.item_code:
+					file_url = frappe.db.get_value('File', {'attached_to_name': i.item_code}, ['file_url'])
+					if file_url:
+						file_url = "/home/user/ERPNext/frappe-bench/sites/preciholesports.com/public"+file_url
+						i.path_c = file_url
+						output = "/home/user/Pictures/output.pdf"
+						label = i.target_warehouse
+						#start
+						packet = io.BytesIO()
+						# create a new PDF with Reportlab
+						can = canvas.Canvas(packet, pagesize=letter)
+						can.drawString(100, 100, label)
+						can.save()
+
+						# move to the beginning of the StringIO buffer
+						packet.seek(0)
+						new_pdf = PdfFileReader(packet)
+						# read your existing PDF
+						existing_pdf = PdfFileReader(open(file_url, "rb"))
+						output = PdfFileWriter()
+						# add the "watermark" (which is the new pdf) on the existing page
+						page = existing_pdf.getPage(0)
+						page2 = new_pdf.getPage(0)
+						page.mergePage(page2)
+						output.addPage(page)
+						# finally, write "output" to a real file
+						outputStream = open("/home/user/Pictures/output.pdf", "wb")
+						output.write(outputStream)
+						outputStream.close()
+						#end
+						if i.qty >= 1:
+							subprocess.run(["lp", "-n", str(i.qty), "-o", i.orientation_c, "-o", 'media='+i.pdf_print_size, "/home/user/Pictures/output.pdf"])
+						else:
+							frappe.msgprint('Print Qty Cannot be Zero')
+					else:
+						frappe.throw('Drawing Not Uploded in Item '+'<b>'+i.item_code)
 
 	def cancel_dle_entry(self):
 		for i in self.item:

@@ -14,10 +14,11 @@ frappe.ui.form.on('DMRN', {
 				cur_frm.set_value('originator', frappe.session.user);
 			}   
 		}
-		if(frm.doc.docstatus == 1){
+		if(frm.doc.docstatus == 0){
 			cur_frm.add_custom_button(__("Design Printout"), function() {
 				frappe.route_options = {
-					'reference_no':frm.doc.name
+					'reference_no':frm.doc.name,
+					'stock_entry_type': 'Drawing Transfer'
 				};
 			frappe.set_route('Form','Design Printout Creation',"new-design-printout-creation-1");
 			}, __("Create"));

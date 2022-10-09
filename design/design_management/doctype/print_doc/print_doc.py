@@ -13,8 +13,8 @@ from reportlab.lib.pagesizes import letter
 
 class PrintDoc(Document):
 	def on_submit(self):	
-		if self.child:
-			for i in self.child:
+		if self.item:
+			for i in self.item:
 				if i.item_code:
 					file_url = frappe.db.get_value('File', {'attached_to_name': i.item_code}, ['file_url'])
 					if file_url:

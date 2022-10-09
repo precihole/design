@@ -78,7 +78,7 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Design Entry Type",
-   "options": "\nDrawing Creation\nDrawing Transfer\nDrawing Receipt\nDrawing Return\nDrawing Discard",
+   "options": "\nDrawing Transfer\nDrawing Receipt\nDrawing Return\nDrawing Discard",
    "reqd": 1
   },
   {
@@ -128,7 +128,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-14 12:33:07.472676",
+ "modified": "2022-10-08 10:27:39.279046",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Printout Creation",
