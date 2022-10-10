@@ -286,7 +286,7 @@ class DesignPrintoutCreation(Document):
 				if i.item_code:
 					file_url = frappe.db.get_value('File', {'attached_to_name': i.item_code}, ['file_url'])
 					if file_url:
-						file_url = "/home/user/ERPNext/frappe-bench/sites/preciholesports.com/public"+file_url
+						file_url = "https://precihole.frappe.cloud"+file_url
 						i.path_c = file_url
 						output = "/home/user/Pictures/output.pdf"
 						label = i.target_warehouse
@@ -314,7 +314,8 @@ class DesignPrintoutCreation(Document):
 						outputStream.close()
 						#end
 						if i.qty >= 1:
-							subprocess.run(["lp", "-n", str(i.qty), "-o", i.orientation_c, "-o", 'media='+i.pdf_print_size, "/home/user/Pictures/output.pdf"])
+							#subprocess.run(["lp", "-n", str(i.qty), "-o", i.orientation_c, "-o", 'media='+i.pdf_print_size, "/home/user/Pictures/output.pdf"])
+							frappe.msgprint('Pirnt')
 						else:
 							frappe.msgprint('Print Qty Cannot be Zero')
 					else:
