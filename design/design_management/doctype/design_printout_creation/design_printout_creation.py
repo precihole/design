@@ -282,7 +282,7 @@ class DesignPrintoutCreation(Document):
 				plus_dle_entry.save()
 	def print_doc(self,i):
 		if self.item:
-			for i in self.items:
+			for i in self.item:
 				if i.item_code:
 					file_url = frappe.db.get_value('File', {'attached_to_name': i.item_code}, ['file_url'])
 					if file_url:
