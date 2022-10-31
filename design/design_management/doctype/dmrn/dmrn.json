@@ -85,7 +85,7 @@
   {
    "fieldname": "reference_no",
    "fieldtype": "Link",
-   "label": "Reference No",
+   "label": "ECN No",
    "options": "ECN",
    "read_only": 1
   },
@@ -116,7 +116,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-06 14:43:20.219756",
+ "modified": "2022-10-30 10:34:41.465090",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",
@@ -138,5 +138,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

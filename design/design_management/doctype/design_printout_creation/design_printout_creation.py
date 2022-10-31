@@ -19,7 +19,7 @@ class DesignPrintoutCreation(Document):
 	def before_save(self):
 		self.set_series() #series
 		self.custom_validation() #all validations
-		#self.item_stock_summary() #summary
+		self.item_stock_summary() #summary
 
 	def before_submit(self):
 		self.status_update()
@@ -35,19 +35,20 @@ class DesignPrintoutCreation(Document):
 					source = i.source_warehouse
 					target = 'Transit'
 					self.create_dle_entry(i,source,target)
-		self.print_doc(i)
+				elif self.stock_entry_type == 'Drawing Receipt':
+					source = 'Transit'
+					target = i.target_warehouse
+					self.create_dle_entry(i,source,target)
+				elif self.stock_entry_type == 'Drawing Return':
+					source = i.source_warehouse
+					target = 'Transit'
+					self.create_dle_entry(i,source,target)
 				# elif self.stock_entry_type == 'Drawing Receipt':
-				# 	source = 'Transit'
+				# 	source = i.source_warehouse
 				# 	target = i.target_warehouse
 				# 	self.create_dle_entry(i,source,target)
-				# elif self.stock_entry_type == 'Drawing Return':
-				# 	source = i.source_warehouse
-				# 	target = 'Transit'
-				# 	self.create_dle_entry(i,source,target)
-				# elif self.stock_entry_type == 'Drawing Receipt':
-				# 	source = i.source_warehouse
-				# 	target = i.target_warehouse
-				# 	self.create_dle_entry(i,source,target)
+		if self.stock_entry_type == 'Drawing Transfer':
+			self.print_doc(i)
 
 	def on_cancel(self):
 		self.cancel_dle_entry()
@@ -81,42 +82,42 @@ class DesignPrintoutCreation(Document):
 						),
 							title=("Zero quantity"),
 					)
-	# 			#in stock qty validate
-	# 			if self.stock_entry_type == ('Drawing Transfer' or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt'):
-	# 				if o.source_warehouse:
-	# 					#Child Table
-	# 					qty_chk = frappe.db.get_all('Revision Stock Summary',
-	# 							filters={
-	# 								'item_code': o.item_code,
-	# 								'revision':o.revision,
-	# 								'warehouse':o.source_warehouse},
-	# 							fields=['actual_qty']
-	# 					)
-	# 					if qty_chk:
-	# 						if o.qty > qty_chk[0].actual_qty:
-	# 							frappe.throw(("Quantity not available for "
-	# 								+frappe.bold(o.item_code)
-	# 								+" in warehouse "+frappe.bold(o.source_warehouse)
-	# 								+" for Revision "+frappe.bold(o.revision)
-	# 								+ "<br><br>"
-	# 								+("Available quantity is "+frappe.bold(qty_chk[0].actual_qty)
-	# 								+", you need "+frappe.bold(float(o.qty)))
-	# 								),
-	# 									title=("Insufficient Stock"),
-	# 							)
-	# 					else:
-	# 						#if not islocal
-	# 						if not self.is_new():
-	# 							frappe.throw(("Quantity not available for "
-	# 								+frappe.bold(o.item_code)
-	# 								+" in warehouse "+frappe.bold(o.source_warehouse)
-	# 								+" for Revision "+frappe.bold(o.revision)
-	# 								+ "<br><br>"
-	# 								+("Available quantity is "+frappe.bold(0)
-	# 								+", you need "+frappe.bold(float(o.qty)))
-	# 								),
-	# 									title=("Insufficient Stock"),
-	# 							)
+				#in stock qty validate
+				if self.stock_entry_type == ('Drawing Transfer' or 'Drawing Return' or 'Drawing Discard' or 'Drawing Receipt'):
+					if o.source_warehouse:
+						#Child Table
+						qty_chk = frappe.db.get_all('Revision Stock Summary',
+								filters={
+									'item_code': o.item_code,
+									'revision':o.revision,
+									'warehouse':o.source_warehouse},
+								fields=['actual_qty']
+						)
+						if qty_chk:
+							if o.qty > qty_chk[0].actual_qty:
+								frappe.throw(("Quantity not available for "
+									+frappe.bold(o.item_code)
+									+" in warehouse "+frappe.bold(o.source_warehouse)
+									+" for Revision "+frappe.bold(o.revision)
+									+ "<br><br>"
+									+("Available quantity is "+frappe.bold(qty_chk[0].actual_qty)
+									+", you need "+frappe.bold(float(o.qty)))
+									),
+										title=("Insufficient Stock"),
+								)
+						else:
+							#if not islocal
+							if not self.is_new():
+								frappe.throw(("Quantity not available for "
+									+frappe.bold(o.item_code)
+									+" in warehouse "+frappe.bold(o.source_warehouse)
+									+" for Revision "+frappe.bold(o.revision)
+									+ "<br><br>"
+									+("Available quantity is "+frappe.bold(0)
+									+", you need "+frappe.bold(float(o.qty)))
+									),
+										title=("Insufficient Stock"),
+								)
 	def item_stock_summary(self):
 		unique_list = []
 		if self.item:
@@ -156,13 +157,17 @@ class DesignPrintoutCreation(Document):
 									'actual_qty' : r.qty_change    
 								})
 	def status_update(self):
-		if self.stock_entry_type == 'Drawing Transfer':
+		if self.stock_entry_type == 'Drawing Transfer' and not self.summary:
+			self.status = 'To Receive'
+		elif self.stock_entry_type == 'Drawing Transfer' and self.summary:
 			self.status = 'To Receive and Return'
-		elif self.stock_entry_type == 'Drawing Creation':
-			self.status = 'Created'
 		elif self.stock_entry_type == 'Drawing Receipt' and not self.drawing_return:
 			self.status = 'Recevied'
-			frappe.db.set_value('Design Printout Creation', self.drawing_transfer, 'status', 'To Return')
+			status = frappe.db.get_value('Design Printout Creation', self.drawing_transfer, 'status')
+			if status == 'To Receive':
+				frappe.db.set_value('Design Printout Creation', self.drawing_transfer, 'status', 'Completed')
+			else:
+				frappe.db.set_value('Design Printout Creation', self.drawing_transfer, 'status', 'To Return')
 		elif self.stock_entry_type == 'Drawing Return':
 			self.status = 'Returned'
 			for i in self.item[:1]:
@@ -286,7 +291,7 @@ class DesignPrintoutCreation(Document):
 				if i.item_code:
 					file_url = frappe.db.get_value('File', {'attached_to_name': i.item_code}, ['file_url'])
 					if file_url:
-						file_url = "https://precihole.frappe.cloud"+file_url
+						file_url = "/home/user/ERPNext/frappe-bench/sites/preciholesports.com/public"+file_url
 						i.path_c = file_url
 						output = "/home/user/Pictures/output.pdf"
 						label = i.target_warehouse

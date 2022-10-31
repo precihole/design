@@ -1,6 +1,5 @@
 // Copyright (c) 2022, Rehan Ansari and contributors
 // For license information, please see license.txt
-
 frappe.ui.form.on('DMRN', {
 	refresh: function(frm) {
 		if(frm.doc.__islocal){
@@ -8,14 +7,13 @@ frappe.ui.form.on('DMRN', {
 			var childTable = frm.add_child("dmrn_details");
 			childTable.drawing_no=""
 			cur_frm.refresh_fields("dmrn_details");
-		}
-		if(frm.doc.__islocal){
+
 			if(frm.doc.originator === undefined){
 				cur_frm.set_value('originator', frappe.session.user);
 			}   
 		}
-		if(frm.doc.docstatus == 0){
-			cur_frm.add_custom_button(__("Design Printout"), function() {
+		if(frm.doc.docstatus == 1){
+			cur_frm.add_custom_button(__("Design Transfer"), function() {
 				frappe.route_options = {
 					'reference_no':frm.doc.name,
 					'stock_entry_type': 'Drawing Transfer'

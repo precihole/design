@@ -8,6 +8,9 @@ frappe.listview_settings['Design Printout Creation'] = {
         else if (doc.status === "Created") {
 			return [__("Created"), "green", "status,=,Closed"];
 		}
+		else if (doc.status === "To Receive") {
+			return [__("To Receive"), "green", "status,=,Closed"];
+		}
         else if (doc.status === "Recevied") {
 			return [__("Recevied"), "green", "status,=,Closed"];
 		}

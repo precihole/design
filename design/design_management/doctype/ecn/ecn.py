@@ -5,11 +5,15 @@ import frappe
 from frappe.model.document import Document
 
 class ECN(Document):
-	pass
 	def before_save(self):
-		def clear_child():
-			if self.warehouse_detail:
-				self.set("warehouse_detail", [])
+		#self.clear_child()
+		self.add_warehouse_details()
+
+	def clear_child(self):
+		if self.warehouse_detail:
+			self.set("warehouse_detail", [])
+
+	def add_warehouse_details(self):
 		if self.item_code:
 			bin_list = frappe.db.get_list('Bin',filters={'item_code': self.item_code},fields=['item_code','warehouse', 'actual_qty'])
 			total_qty = 0
@@ -17,7 +21,7 @@ class ECN(Document):
 				for i in bin_list:
 					total_qty = total_qty + i.actual_qty
 				if total_qty > 0:
-					clear_child()
+					self.clear_child()
 					for j in bin_list:
 						if j.actual_qty > 0:
 							self.append('warehouse_detail', {
@@ -27,10 +31,8 @@ class ECN(Document):
 							})
 					self.total_qty = total_qty
 				elif total_qty == 0:
-					if self.warehouse_detail:
-						clear_child()
+					self.clear_child()
 					self.total_qty = 0
 			else:
-				if self.warehouse_detail:
-					clear_child()
+				self.clear_child()
 				self.total_qty = 0

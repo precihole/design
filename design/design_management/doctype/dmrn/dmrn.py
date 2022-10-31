@@ -5,8 +5,13 @@ import frappe
 from frappe.model.document import Document
 
 class DMRN(Document):
-	pass
 	def on_submit(self):
+		self.update_revision_in_item()
+
+	def before_save(self):
+		self.custom_validations()
+
+	def update_revision_in_item(self):
 		if self.dmrn_details:
 			for i in self.dmrn_details:
 				if i.drawing_no:
@@ -21,7 +26,7 @@ class DMRN(Document):
 					"reference_no":self.name
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					revision_entry.save()	
-	def before_save(self):
+	def custom_validations(self):
 		if self.dmrn_details:
 			for i in self.dmrn_details:
 				revision_c = frappe.db.get_value('Item', i.drawing_no, 'revision_c')
