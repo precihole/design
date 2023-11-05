@@ -1,0 +1,111 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-11-05 09:34:00.520355",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_warehouse",
+  "t_warehouse",
+  "item_code",
+  "revision",
+  "column_break_3",
+  "qty",
+  "received_qty",
+  "section_break_7",
+  "path_c",
+  "pdf_print_size",
+  "orientation_c"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "s_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source",
+   "mandatory_depends_on": "eval:parent.stock_entry_type == \"Drawing Discard\" || parent.stock_entry_type == \"Design Transfer\"",
+   "options": "Design Warehouse",
+   "read_only_depends_on": "eval:parent.stock_entry_type == \"Drawing Creation\""
+  },
+  {
+   "columns": 2,
+   "fieldname": "t_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Target",
+   "mandatory_depends_on": "eval:parent.stock_entry_type == \"Drawing Creation\" || parent.stock_entry_type == \"Drawing Discard\" || parent.stock_entry_type == \"Design Transfer\"",
+   "options": "Design Warehouse"
+  },
+  {
+   "columns": 3,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "item_code.revision_c",
+   "fetch_if_empty": 1,
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Revision"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty",
+   "reqd": 1
+  },
+  {
+   "fieldname": "received_qty",
+   "fieldtype": "Float",
+   "label": "Received Qty",
+   "no_copy": 1
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "path_c",
+   "fieldtype": "Data",
+   "label": "Path"
+  },
+  {
+   "fieldname": "pdf_print_size",
+   "fieldtype": "Data",
+   "label": "PDF Print Size"
+  },
+  {
+   "default": "Portrait",
+   "fieldname": "orientation_c",
+   "fieldtype": "Select",
+   "label": "Orientation_C",
+   "options": "\nLandscape\nPortrait"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-11-05 17:37:10.631277",
+ "modified_by": "Administrator",
+ "module": "Design Management",
+ "name": "Design Distribution Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
