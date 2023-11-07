@@ -70,6 +70,7 @@
   {
    "fieldname": "voucher_no",
    "fieldtype": "Dynamic Link",
+   "in_standard_filter": 1,
    "label": "Voucher No",
    "options": "voucher_type",
    "read_only": 1
@@ -113,7 +114,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-10 13:07:28.669218",
+ "modified": "2023-11-06 10:22:59.183023",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Ledger Entry",

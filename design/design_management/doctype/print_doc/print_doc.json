@@ -6,21 +6,12 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "test",
-  "printer_list",
   "default",
+  "printer_list",
   "column_break_4",
-  "check_status",
-  "section_break_6",
-  "attact",
-  "child"
+  "check_status"
  ],
  "fields": [
-  {
-   "fieldname": "test",
-   "fieldtype": "Small Text",
-   "label": "test"
-  },
   {
    "fieldname": "printer_list",
    "fieldtype": "Select",
@@ -29,19 +20,8 @@
   {
    "fieldname": "default",
    "fieldtype": "Data",
-   "label": "default",
+   "label": "Default",
    "read_only": 1
-  },
-  {
-   "fieldname": "attact",
-   "fieldtype": "Attach",
-   "label": "attact"
-  },
-  {
-   "fieldname": "child",
-   "fieldtype": "Table",
-   "label": "child",
-   "options": "childTest"
   },
   {
    "fieldname": "column_break_4",
@@ -51,15 +31,11 @@
    "fieldname": "check_status",
    "fieldtype": "Button",
    "label": "Check Status"
-  },
-  {
-   "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-28 12:11:23.843575",
+ "modified": "2023-11-06 15:13:03.932279",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Print Doc",

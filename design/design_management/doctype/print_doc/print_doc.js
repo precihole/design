@@ -27,11 +27,10 @@ frappe.ui.form.on('Print Doc', {
 frappe.ui.form.on('Print Doc', {
 	check_status: function(frm) {
 		frappe.call({
-			async:false,
 			method:'design.design_management.doctype.print_doc.print_doc.get_printer_status',
 			callback:function(res){
 				if(res.message !== undefined){
-					frappe.msgprint(res.message.data[0])
+					console.log(res.message)
 				}
 			}
 		})
