@@ -1,8 +1,8 @@
-# Copyright (c) 2022, Rehan Ansari and contributors
+# Copyright (c) 2023, Precihole and contributors
 # For license information, please see license.txt
 
 # import frappe
 from frappe.model.document import Document
 
-class DesignPrintoutItem(Document):
+class DMRNDetail(Document):
 	pass

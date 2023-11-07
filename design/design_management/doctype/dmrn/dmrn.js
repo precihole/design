@@ -18,7 +18,7 @@ frappe.ui.form.on('DMRN', {
 					'reference_no': frm.doc.name,
 					'entry_type': 'Drawing Transfer'
 				};
-				frappe.set_route('Form','Design Distribution',"design-distribution-1");
+				frappe.set_route('Form','Design Distribution',"new-design-distribution-wicrykkhju");
 			});
 		}
 

@@ -1,4 +1,5 @@
 {
+ "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "autoname": "naming_series:",
  "creation": "2022-09-10 12:40:32.372009",
@@ -11,15 +12,14 @@
   "posting_date",
   "posting_time",
   "warehouse",
+  "revision",
   "column_break_5",
   "voucher_type",
   "voucher_no",
   "qty_change",
   "qty_after_transaction",
   "revision_no",
-  "is_cancelled",
-  "revision",
-  "revision_id"
+  "is_cancelled"
  ],
  "fields": [
   {
@@ -27,8 +27,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Series",
-   "options": "DLE-.YYYY.-",
-   "reqd": 1
+   "options": "DLE-.FY.-"
   },
   {
    "fieldname": "item_code",
@@ -88,12 +87,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "revision_no",
-   "fieldtype": "Data",
-   "label": "Revision No",
-   "read_only": 1
-  },
-  {
    "default": "0",
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
@@ -104,17 +97,19 @@
    "fieldname": "revision",
    "fieldtype": "Link",
    "label": "Revision",
-   "options": "Revision"
+   "options": "Revision",
+   "read_only": 1
   },
   {
-   "fieldname": "revision_id",
+   "fieldname": "revision_no",
    "fieldtype": "Data",
-   "label": "Revision ID"
+   "label": "Revision No",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-06 10:22:59.183023",
+ "modified": "2023-11-08 00:15:27.092041",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Ledger Entry",

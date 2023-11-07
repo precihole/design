@@ -18,8 +18,7 @@
   "items",
   "section_break_8",
   "summary",
-  "amended_from",
-  "drawing_discard"
+  "amended_from"
  ],
  "fields": [
   {
@@ -47,7 +46,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "\nDraft\nCreated\nTo Receive\nTo Receive and Return\nRecevied\nReturned\nTo Return\nTo Return Receive\nCompleted\nCancelled",
+   "options": "\nDraft\nTransferred\nDiscarded\nCompleted\nCancelled",
    "read_only": 1
   },
   {
@@ -99,19 +98,12 @@
    "fieldtype": "Table",
    "label": "Items",
    "options": "Design Distribution Item"
-  },
-  {
-   "fieldname": "drawing_discard",
-   "fieldtype": "Link",
-   "label": "Drawing Discard",
-   "options": "Design Distribution",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 18:34:40.324813",
+ "modified": "2023-11-08 00:09:23.676886",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Distribution",

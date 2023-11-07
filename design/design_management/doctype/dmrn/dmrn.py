@@ -9,23 +9,10 @@ class DMRN(Document):
 		self.custom_validations()
 
 	def on_submit(self):
-		self.update_revision_in_item()
-
-	def update_revision_in_item(self):
-		if self.dmrn_details:
-			for i in self.dmrn_details:
-				if i.drawing_no:
-					item_doc = frappe.get_doc("Item",  i.drawing_no)
-					item_doc.revision_c = i.rev_no
-					item_doc.save()
-				if i.rev_no:
-					revision_entry = frappe.get_doc({
-					"doctype":"Revision",
-					"revision_id":i.rev_no,
-					"item":i.drawing_no,
-					"reference_no":self.name
-					}).insert(ignore_permissions=True,ignore_mandatory=True)
-					revision_entry.save()
+		self.update_new_revision()
+	
+	def on_cancel(self):
+		self.delete_revision()
 	
 	def custom_validations(self):
 		if self.dmrn_details:
@@ -39,3 +26,21 @@ class DMRN(Document):
 						frappe.throw(f"New revision cannot be empty in <b>{item.item_code}</b>")
 				else:
 					frappe.throw(f"Revision is empty in Item Master <b>{item.item_code}</b>")
+
+	def update_new_revision(self):
+		if self.dmrn_details:
+			for item in self.dmrn_details:
+				if item.item_code and item.new_revision:
+					doc = frappe.get_doc("Item", item.item_code)
+					doc.revision_c = item.new_revision
+					doc.save()
+					revision_entry = frappe.get_doc({
+						"doctype": "Revision",
+						"revision": item.new_revision,
+						"item_code": item.item_code,
+						"reference_no": self.name
+					}).insert(ignore_permissions=True,ignore_mandatory=True)
+					revision_entry.save()
+
+	def delete_revision(self):
+		frappe.db.delete("Revision", {"reference_no": self.name})

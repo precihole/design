@@ -3,6 +3,21 @@
 
 frappe.ui.form.on('Design Distribution', {
 	refresh: function(frm) {
+
+		if(frm.doc.__islocal && frm.doc.reference_no){
+			console.log('run')
+			frappe.model.with_doc("DMRN", frm.doc.reference_no, function() {
+				var mcd = frappe.model.get_doc("DMRN", frm.doc.reference_no);
+					$.each(mcd.dmrn_details, function(i, d) {
+					i = cur_frm.add_child("items");
+					i.s_warehouse = 'Design';
+					i.item_code = d.item_code;
+					i.revision = d.new_revision;
+				});
+				cur_frm.refresh_field("items");
+			});
+		}
+
 		var child = frm.doc.summary
 		if(frm.doc.docstatus == 1 && frm.doc.entry_type == "Drawing Transfer"){
 			cur_frm.set_intro("Drawings Printed and Sent to Respective Departments.", "blue");

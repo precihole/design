@@ -1,51 +1,28 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{item}-{revision_id}",
+ "autoname": "format:{item_code}-{revision}",
  "creation": "2022-09-05 16:02:31.987249",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "revision_section",
-  "revision_id",
-  "item",
+  "revision",
+  "item_code",
   "item_name",
   "column_break_5",
-  "revision_description",
-  "reference_no"
+  "description",
+  "reference_no",
+  "is_cancelled"
  ],
  "fields": [
   {
-   "fieldname": "revision_section",
-   "fieldtype": "Section Break",
-   "label": "Revision"
-  },
-  {
-   "fieldname": "revision_id",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Revision ID",
-   "reqd": 1
-  },
-  {
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "item.item_name",
+   "fetch_from": "item_code.item_name",
+   "fetch_if_empty": 1,
    "fieldname": "item_name",
    "fieldtype": "Data",
-   "label": "Item Name"
-  },
-  {
-   "fieldname": "revision_description",
-   "fieldtype": "Small Text",
-   "label": "Revision Description"
+   "label": "Item Name",
+   "read_only": 1
   },
   {
    "fieldname": "reference_no",
@@ -57,11 +34,39 @@
   {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Revision Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_cancelled",
+   "fieldtype": "Check",
+   "label": "Is Cancelled"
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Revision",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-06 12:39:26.880658",
+ "modified": "2023-11-07 23:25:34.027545",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Revision",

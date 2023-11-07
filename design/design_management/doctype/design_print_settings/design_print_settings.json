@@ -1,7 +1,8 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2022-09-27 14:26:42.285257",
+ "creation": "2023-11-07 23:33:04.968642",
+ "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -13,15 +14,15 @@
  ],
  "fields": [
   {
+   "fieldname": "default",
+   "fieldtype": "Data",
+   "label": "Default Printer",
+   "read_only": 1
+  },
+  {
    "fieldname": "printer_list",
    "fieldtype": "Select",
    "label": "Printer List"
-  },
-  {
-   "fieldname": "default",
-   "fieldtype": "Data",
-   "label": "Default",
-   "read_only": 1
   },
   {
    "fieldname": "column_break_4",
@@ -34,21 +35,20 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "issingle": 1,
  "links": [],
- "modified": "2023-11-06 15:13:03.932279",
+ "modified": "2023-11-07 23:33:55.264930",
  "modified_by": "Administrator",
  "module": "Design Management",
- "name": "Print Doc",
+ "name": "Design Print Settings",
  "owner": "Administrator",
  "permissions": [
   {
    "create": 1,
    "delete": 1,
    "email": 1,
-   "export": 1,
    "print": 1,
    "read": 1,
-   "report": 1,
    "role": "System Manager",
    "share": 1,
    "write": 1

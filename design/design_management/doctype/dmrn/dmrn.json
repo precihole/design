@@ -1,5 +1,4 @@
 {
- "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series:",
@@ -75,12 +74,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "dmrn_details",
-   "fieldtype": "Table",
-   "label": "Details",
-   "options": "DMRN De"
-  },
-  {
    "fieldname": "reference_no",
    "fieldtype": "Link",
    "label": "ECN No",
@@ -116,12 +109,18 @@
    "fieldtype": "Link",
    "label": "Modification Type",
    "options": "Modification Type"
+  },
+  {
+   "fieldname": "dmrn_details",
+   "fieldtype": "Table",
+   "label": "Details",
+   "options": "DMRN Detail"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 21:48:04.096107",
+ "modified": "2023-11-07 22:03:35.805137",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",
