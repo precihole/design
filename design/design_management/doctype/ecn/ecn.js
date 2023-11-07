@@ -4,12 +4,12 @@
 frappe.ui.form.on('ECN', {
 	refresh: function(frm) {
 		if(frm.doc.docstatus == 1){
-			cur_frm.add_custom_button(__("DMRN"), function() {
+			cur_frm.add_custom_button(__("Create DMRN"), function() {
 				frappe.route_options = {
-					'reference_no':frm.doc.name
+					'reference_no': frm.doc.name
 				};
-			frappe.set_route('Form','DMRN',"new-dmrn-1");
-			}, __("Create"));
+				frappe.set_route('Form','DMRN',"new-dmrn-1");
+			});
 		}
 	}
 });

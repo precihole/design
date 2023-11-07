@@ -1,4 +1,5 @@
 {
+ "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series:",
@@ -9,13 +10,14 @@
  "field_order": [
   "naming_series",
   "item_code",
+  "item_name",
   "description",
   "revision",
   "remark",
   "column_break_4",
   "posting_date",
   "suggested_change",
-  "warehouse_detail",
+  "warehouse_details",
   "total_qty",
   "amended_from"
  ],
@@ -29,14 +31,17 @@
   },
   {
    "fetch_from": "item_code.description",
+   "fetch_if_empty": 1,
    "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "Description"
+   "label": "Description",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "remark",
    "fieldtype": "Small Text",
-   "label": "Remark"
+   "label": "Remark (If Any)"
   },
   {
    "fieldname": "suggested_change",
@@ -45,15 +50,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "warehouse_detail",
-   "fieldtype": "Table",
-   "label": "Warehouse Detail",
-   "options": "Warehouse Detail"
-  },
-  {
    "fieldname": "total_qty",
    "fieldtype": "Float",
-   "label": "Total Qty"
+   "label": "Total Qty",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -70,9 +70,12 @@
   },
   {
    "fetch_from": "item_code.revision_c",
+   "fetch_if_empty": 1,
    "fieldname": "revision",
    "fieldtype": "Data",
-   "label": "Revision"
+   "label": "Revision",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "naming_series",
@@ -80,22 +83,38 @@
    "in_list_view": 1,
    "label": "Series",
    "no_copy": 1,
-   "options": "ECN-.YYYY.-",
+   "options": "ECN-.FY.-",
    "read_only": 1,
-   "reqd": 1,
    "set_only_once": 1
   },
   {
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posting Date"
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse_details",
+   "fieldtype": "Table",
+   "label": "Warehouse Details",
+   "options": "Warehouse Detail",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fetch_if_empty": 1,
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "no_copy": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-30 10:04:01.597217",
+ "modified": "2023-11-07 20:50:15.024509",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",

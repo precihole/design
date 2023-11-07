@@ -5,11 +5,11 @@ import frappe
 from frappe.model.document import Document
 
 class DMRN(Document):
-	def on_submit(self):
-		self.update_revision_in_item()
-
 	def before_save(self):
 		self.custom_validations()
+
+	def on_submit(self):
+		self.update_revision_in_item()
 
 	def update_revision_in_item(self):
 		if self.dmrn_details:
@@ -25,14 +25,17 @@ class DMRN(Document):
 					"item":i.drawing_no,
 					"reference_no":self.name
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
-					revision_entry.save()	
+					revision_entry.save()
+	
 	def custom_validations(self):
 		if self.dmrn_details:
-			for i in self.dmrn_details:
-				revision_c = frappe.db.get_value('Item', i.drawing_no, 'revision_c')
-				if revision_c:
-					if i.rev_no:
-						if i.rev_no == revision_c:
-							frappe.throw("Revision is already at "+"<b>"+i.rev_no+"</b>"+" or empty revision")
+			for item in self.dmrn_details:
+				old_revision = frappe.db.get_value('Item', item.item_code, 'revision_c')
+				if old_revision:
+					if item.new_revision:
+						if item.new_revision == old_revision:
+							frappe.throw(f"Revision is already at {item.new_revision} in <b>{item.item_code}</b>")
+					else:
+						frappe.throw(f"New revision cannot be empty in <b>{item.item_code}</b>")
 				else:
-					frappe.throw("Revision cannot be empty in Item "+"<b>"+i.drawing_no+"</b>")
+					frappe.throw(f"Revision is empty in Item Master <b>{item.item_code}</b>")

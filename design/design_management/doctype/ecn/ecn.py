@@ -9,25 +9,21 @@ class ECN(Document):
 		#self.clear_child()
 		self.add_warehouse_details()
 
-	def clear_child(self):
-		if self.warehouse_detail:
-			self.set("warehouse_detail", [])
-
 	def add_warehouse_details(self):
 		if self.item_code:
-			bin_list = frappe.db.get_list('Bin',filters={'item_code': self.item_code},fields=['item_code','warehouse', 'actual_qty'])
+			bin_list = frappe.db.get_all('Bin', {'item_code': self.item_code}, ['item_code','warehouse', 'actual_qty'])
 			total_qty = 0
 			if bin_list:
-				for i in bin_list:
-					total_qty = total_qty + i.actual_qty
+				for item in bin_list:
+					total_qty = total_qty + item.actual_qty
 				if total_qty > 0:
 					self.clear_child()
-					for j in bin_list:
-						if j.actual_qty > 0:
-							self.append('warehouse_detail', {
-								'item_code' : j.item_code,
-								'warehouse' : j.warehouse,
-								'actual_qty' : j.actual_qty  
+					for item in bin_list:
+						if item.actual_qty > 0:
+							self.append('warehouse_details', {
+								'item_code' : item.item_code,
+								'warehouse' : item.warehouse,
+								'actual_qty' : item.actual_qty  
 							})
 					self.total_qty = total_qty
 				elif total_qty == 0:
@@ -36,3 +32,7 @@ class ECN(Document):
 			else:
 				self.clear_child()
 				self.total_qty = 0
+	
+	def clear_child(self):
+		if self.warehouse_details:
+			self.set("warehouse_details", [])
