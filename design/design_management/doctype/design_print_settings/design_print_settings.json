@@ -1,4 +1,5 @@
 {
+ "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2023-11-07 23:33:04.968642",
@@ -10,7 +11,8 @@
   "default",
   "printer_list",
   "column_break_4",
-  "check_status"
+  "check_status",
+  "ip_address"
  ],
  "fields": [
   {
@@ -32,12 +34,17 @@
    "fieldname": "check_status",
    "fieldtype": "Button",
    "label": "Check Status"
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "ip address"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-07 23:33:55.264930",
+ "modified": "2023-11-08 12:13:32.537549",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Print Settings",

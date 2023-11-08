@@ -33,35 +33,18 @@ frappe.ui.form.on('Design Distribution', {
 			if(cur_frm.doc.summary.length > 0){
 					
 			cur_frm.add_custom_button(__("Drawing Discard"), function() {
-				frappe.msgprint("djhdj")
-			
-					frappe.run_serially([
-						() => frappe.new_doc('Design Distribution'),
-						() => {
-							cur_frm.set_value("entry_type","Drawing Discard"),
-							cur_frm.set_value("drawing_discard", frm.doc.name)
-		 
-						},
-						() => {
-							//cur_frm.doc.stock_entry_type == 'Manufacture',
-							cur_frm.clear_table('items')
-							var len = child.length
-							for(var i=0; i < len; i++){
-								if ((child[i].qty - child[i].ordered_qty) > 0){
-									cur_frm.add_child("items", { 
-										item_code : child[i].item_code,
-										qty : child[i].actual_qty,
-										s_warehouse : child[i].t_warehouse,
-										revision : child[i].revision
-									})
-								}
-							}
+				frappe.call({
+					method: 'design.design_management.doctype.design_distribution.design_distribution.create_discard_entry',
+					args: {
+						design_distribution: frm.doc.name,
+						summary: frm.doc.summary
+					},
+					callback: (r) => {
+						if(r.message){
+							console.log(r.message)
 						}
-					], 
-						//() => next action you want to perform
-					);
-			
-		
+					}
+				})
 			})
 		}
 			// console.log(remove_flag)

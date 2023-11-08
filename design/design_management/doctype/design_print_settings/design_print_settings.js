@@ -9,11 +9,12 @@ frappe.ui.form.on('Design Print Settings', {
 			method:'design.design_management.doctype.design_print_settings.design_print_settings.get_printer_list',
 			callback:function(res){
 				if(res.message !== undefined){
+					console.log(res.message)
 					var responsePrinterList = res.message.data
 					const defaultPrinter = responsePrinterList[0]
 					const systemPrinter = defaultPrinter.split(" ").pop()
 					for(var printer = 1; printer < responsePrinterList.length; printer++){
-						printerList.push(responseData[printer].split(/\s(.+)/)[0])
+						printerList.push(responsePrinterList[printer].split(/\s(.+)/)[0])
 					}
 					frm.set_df_property('printer_list', 'options', printerList)
 					frm.set_value('default', systemPrinter)
@@ -25,6 +26,9 @@ frappe.ui.form.on('Design Print Settings', {
 	check_status: function(frm) {
 		frappe.call({
 			method:'design.design_management.doctype.design_print_settings.design_print_settings.get_printer_status',
+			args: {
+				ip_address: frm.doc.ip_address
+			},
 			callback:function(res){
 				if(res.message !== undefined){
 					console.log(res.message)

@@ -12,10 +12,15 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.colors import lightgrey
+import json
 
 class DesignDistribution(Document):
 	def before_save(self):
-		self.item_stock_summary()
+		if self.entry_type == 'Drawing Transfer':
+			self.item_stock_summary()
+	
+	def before_submit(self):
+		self.set_status()
 
 	def on_submit(self):
 		if self.items:
@@ -26,7 +31,7 @@ class DesignDistribution(Document):
 
 					# Transfer to Target
 					self.transferQuantities(item)
-					#self.print_design_drawings_per_item(item)
+					self.print_design_drawings_per_item(item)
 				elif self.entry_type == "Drawing Return":
 					# Transfer to Target
 					self.transferQuantities(item)
@@ -82,7 +87,7 @@ class DesignDistribution(Document):
 					frappe.db.set_value('Design Ledger Entry', entry.name, 'is_cancelled', 1)
 					actual_qty = frappe.db.get_value('Design Bin', {'item_code': entry.item_code, 'warehouse': entry.warehouse}, 'actual_qty')
 					update_qty = actual_qty - entry.qty_change
-					frappe.db.set_value('Design Bin', entry.name, 'actual_qty', update_qty)
+					frappe.db.set_value('Design Bin', {'item_code': entry.item_code, 'warehouse': entry.warehouse}, 'actual_qty', update_qty)
 	
 	def item_stock_summary(self):
 		unique_list = []
@@ -122,51 +127,15 @@ class DesignDistribution(Document):
 									'warehouse' : r.warehouse,
 									'actual_qty' : r.qty_change    
 								})
+	def set_status(self):
+		if self.entry_type == 'Drawing Transfer':
+			self.status = 'Transferred'
+		elif self.entry_type == 'Drawing Return':
+			self.status = 'Returned'
+		elif self.entry_type == 'Drawing Discard':
+			self.status = 'Discarded'
 
 	def print_design_drawings_per_item(self, item):
-		if item.item_code:
-			file_url = frappe.db.get_value('File', {'attached_to_name': item.item_code}, ['file_url'])
-			if file_url:
-				file_url = "/home/rehan/frappe-bench/sites/design_develop/public"+file_url
-				item.path_c = file_url
-				output = "/home/rehan/Output.pdf"
-				label = item.t_warehouse
-				#start
-				packet = io.BytesIO()
-				# create a new PDF with Reportlab
-				pdf_reader = PdfFileReader(file_url)
-				pdf_writer = PdfFileWriter()
-
-				opacity = float(frappe.form_dict.get('opacity', 0.5))
-			
-				for page_num in range(pdf_reader.getNumPages()):
-					# Create a watermark canvas for the current page
-					page = pdf_reader.getPage(page_num)
-					page_width = page.mediaBox.getWidth()
-					page_height = page.mediaBox.getHeight()
-					watermark_canvas = create_watermark_canvas(label, page_width, page_height, opacity)
-
-					# Merge the watermark canvas with the current page
-					watermark_pdf = PdfFileReader(watermark_canvas)
-					watermark_page = watermark_pdf.getPage(0)
-					page.mergePage(watermark_page)
-
-					pdf_writer.addPage(page)
-
-				output_pdf = BytesIO()
-				pdf_writer.write(output_pdf)
-				output_pdf.seek(0)
-				outputStream = open("/home/rehan/Output.pdf", "wb")
-				pdf_writer.write(outputStream)
-				outputStream.close()
-				#end
-				if item.qty > 0:
-					#subprocess.run(["lp", "-n", str(item.qty), "-o", item.orientation_c, "-o", 'media='+item.pdf_print_size, "/home/rehan/Target Centre.pdf"])
-					frappe.msgprint('Print')
-				else:
-					frappe.msgprint('Print Qty Cannot be Zero')
-			else:
-				frappe.throw('Drawing Not Uploded in Item '+'<b>'+item.item_code)
 		def create_watermark_canvas(text, page_width, page_height, opacity):
 			packet = BytesIO()
 			c = canvas.Canvas(packet, pagesize=(page_width, page_height))
@@ -206,6 +175,49 @@ class DesignDistribution(Document):
 			packet.seek(0)
 
 			return packet
+		if item.item_code:
+			file_url = frappe.db.get_value('File', {'attached_to_name': item.item_code}, ['file_url'])
+			if file_url:
+				file_url = "/home/rehan/frappe-bench/sites/design_dev/public"+file_url
+				item.path_c = file_url
+				output = "/home/rehan/Output.pdf"
+				label = item.t_warehouse
+				#start
+				packet = io.BytesIO()
+				# create a new PDF with Reportlab
+				pdf_reader = PdfFileReader(file_url)
+				pdf_writer = PdfFileWriter()
+
+				opacity = float(frappe.form_dict.get('opacity', 0.9))
+			
+				for page_num in range(pdf_reader.getNumPages()):
+					# Create a watermark canvas for the current page
+					page = pdf_reader.getPage(page_num)
+					page_width = page.mediaBox.getWidth()
+					page_height = page.mediaBox.getHeight()
+					watermark_canvas = create_watermark_canvas(label, page_width, page_height, opacity)
+
+					# Merge the watermark canvas with the current page
+					watermark_pdf = PdfFileReader(watermark_canvas)
+					watermark_page = watermark_pdf.getPage(0)
+					page.mergePage(watermark_page)
+
+					pdf_writer.addPage(page)
+
+				output_pdf = BytesIO()
+				pdf_writer.write(output_pdf)
+				output_pdf.seek(0)
+				outputStream = open("/home/rehan/Output.pdf", "wb")
+				pdf_writer.write(outputStream)
+				outputStream.close()
+				#end
+				if item.qty > 0:
+					subprocess.run(["lp", "-n", str(item.qty), "-o", item.orientation, "-o", 'media='+item.pdf_print_size, "/home/rehan/Output.pdf"])
+					frappe.msgprint('Print')
+				else:
+					frappe.msgprint('Print Qty Cannot be Zero')
+			else:
+				frappe.throw('Drawing Not Uploded in Item '+'<b>'+item.item_code)
 	# def combine_pdfs(pdf_list):
 	# 	pdf_writer = PdfFileWriter()
 	# 	for pdf_data in pdf_list:
@@ -224,6 +236,19 @@ class DesignDistribution(Document):
 def ping():
 	return 'pong'
 
+@frappe.whitelist()
+def create_discard_entry():
+	summary = frappe.db.get_all('Revision Stock Summary', {'parent': frappe.form_dict.design_distribution, 'docstatus': 1}, ['warehouse as s_warehouse', 'item_code', 'revision', 'actual_qty as qty'])
+
+	new_dle_entry = frappe.get_doc({
+		"doctype": "Design Distribution",
+		"entry_type": 'Drawing Discard',
+		"posting_date": frappe.utils.nowdate(),
+		"design_distribution": frappe.form_dict.design_distribution,
+		"items" : summary
+	})
+	new_dle_entry.insert(ignore_permissions=True, ignore_mandatory=True)
+	new_dle_entry.save()
 # @frappe.whitelist()
 # def update_received_qty():
 # 	received_qty = frappe.db.get_value('Design Distribution Item', frappe.form_dict.id, 'received_qty')

@@ -20,7 +20,8 @@ def get_printer_list():
 @frappe.whitelist()
 def get_printer_status():
 	# Define the command as a list of strings
-	command = ["ping", "-c", "4", "example.com"]
+	ip_address = frappe.form_dict.ip_address
+	command = ["ping", "-c", "4", ip_address]
 
 	# Run the ping command
 	result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
