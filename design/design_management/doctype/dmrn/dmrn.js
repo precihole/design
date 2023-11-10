@@ -9,14 +9,14 @@ frappe.ui.form.on('DMRN', {
 
 			if(!frm.doc.originator){
 				frm.set_value('originator', frappe.session.user);
-			}   
+			}
 		}
 
 		if(frm.doc.docstatus == 1){
 			frm.add_custom_button(__("Create Design Distribution"), function() {
 				frappe.route_options = {
-					'reference_no': frm.doc.name,
-					'entry_type': 'Drawing Transfer'
+					'entry_type': 'Drawing Transfer',
+					'reference_no': frm.doc.name
 				};
 				frappe.set_route('Form','Design Distribution',"new-design-distribution-wicrykkhju");
 			});
@@ -46,7 +46,6 @@ frappe.ui.form.on('DMRN', {
 						addDMRNDetail.new_revision = new_revision;
 						frm.refresh_fields("dmrn_details");
 					} else {
-						// Handle the case where res.message or res.message.revision is null or undefined.
 						console.error("The response does not contain the expected data.");
 					}
 				}
