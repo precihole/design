@@ -188,6 +188,5 @@ app_license = "MIT"
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["fieldname", "=", "revision_c"]]},
-    {"dt": "Design Warehouse", "filters": [["name", "in", ["Transit","Scrap","Design"]]]},
     {"dt": "Workflow", "filters": [["name", "in", ["ECN", "DMRN"]]]}
 ]
