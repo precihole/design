@@ -75,7 +75,8 @@
    "fieldtype": "Data",
    "label": "Revision",
    "no_copy": 1,
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "naming_series",
@@ -114,7 +115,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 20:50:15.024509",
+ "modified": "2023-11-10 10:36:54.338207",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",
