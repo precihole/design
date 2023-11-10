@@ -16,6 +16,9 @@ class DMRN(Document):
 		self.update_new_revision()
 		for item in self.dmrn_details:
 			self.link_new_drawing(item)
+		
+		#delete new drawing from DMRN
+		frappe.db.delete("File", {"attached_to_doctype": self.doctype, 'attached_to_name': self.name})
 	
 	def on_cancel(self):
 		self.delete_revision()
@@ -59,7 +62,7 @@ class DMRN(Document):
 		#delete old drawing
 		frappe.db.delete("File", {"attached_to_doctype": 'Item', 'attached_to_name': item.item_code})
 
-		all_drawings = frappe.get_all("File", {"attached_to_doctype": self.doctype, "attached_to_name": self.name}, ['file_name', 'file_url', 'file_size', 'file_type', 'is_private'])
+		all_drawings = frappe.get_all("File", {'attached_to_doctype': self.doctype, 'attached_to_name': self.name, 'file_url': item.new_drawing}, ['file_name', 'file_url', 'file_size', 'file_type', 'is_private'])
 		for drawing in all_drawings:
 			link_drawing_to_item = frappe.get_doc({
 				"doctype": "File",
