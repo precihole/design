@@ -50,7 +50,8 @@ class DMRN(Document):
 						"doctype": "Revision",
 						"revision": item.new_revision,
 						"item_code": item.item_code,
-						"reference_no": self.name
+						"reference_no": self.name,
+						"description": "This is automatic entry from DMRN"
 					}).insert(ignore_permissions=True,ignore_mandatory=True)
 					revision_entry.save()
 	

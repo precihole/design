@@ -1,5 +1,4 @@
 {
- "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2023-11-07 23:33:04.968642",
@@ -16,7 +15,14 @@
   "printer_status",
   "ip_address",
   "column_break_4",
-  "check_status"
+  "check_status",
+  "file_path_section",
+  "public",
+  "output",
+  "print_config_section",
+  "opacity",
+  "paper_size",
+  "orientation"
  ],
  "fields": [
   {
@@ -62,12 +68,51 @@
    "fieldname": "set_default",
    "fieldtype": "Button",
    "label": "Set Default"
+  },
+  {
+   "fieldname": "file_path_section",
+   "fieldtype": "Section Break",
+   "label": "Server File Path"
+  },
+  {
+   "fieldname": "public",
+   "fieldtype": "Data",
+   "label": "Public path"
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Data",
+   "label": "output path"
+  },
+  {
+   "fieldname": "opacity",
+   "fieldtype": "Float",
+   "label": "Opacity"
+  },
+  {
+   "fieldname": "print_config_section",
+   "fieldtype": "Section Break",
+   "label": "Print Config"
+  },
+  {
+   "default": "A4",
+   "fieldname": "paper_size",
+   "fieldtype": "Select",
+   "label": "Paper Size",
+   "options": "A4\nA3"
+  },
+  {
+   "default": "Portrait",
+   "fieldname": "orientation",
+   "fieldtype": "Select",
+   "label": "Orientation",
+   "options": "\nLandscape\nPortrait"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-10 09:40:23.638134",
+ "modified": "2023-11-10 12:32:04.541869",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Print Settings",

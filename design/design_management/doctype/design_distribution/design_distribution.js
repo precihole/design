@@ -3,9 +3,7 @@
 
 frappe.ui.form.on('Design Distribution', {
 	refresh: function(frm) {
-
 		if(frm.doc.__islocal && frm.doc.reference_no){
-			console.log('run')
 			frappe.model.with_doc("DMRN", frm.doc.reference_no, function() {
 				var mcd = frappe.model.get_doc("DMRN", frm.doc.reference_no);
 					$.each(mcd.dmrn_details, function(i, d) {
@@ -13,12 +11,12 @@ frappe.ui.form.on('Design Distribution', {
 					i.s_warehouse = 'Design';
 					i.item_code = d.item_code;
 					i.revision = d.new_revision;
+					i.qty = 1
 				});
 				cur_frm.refresh_field("items");
 			});
 		}
 
-		var child = frm.doc.summary
 		if(frm.doc.docstatus == 1 && frm.doc.entry_type == "Drawing Transfer"){
 			cur_frm.set_intro("Drawings Printed and Sent to Respective Departments.", "blue");
 			var remove_flag
@@ -41,7 +39,7 @@ frappe.ui.form.on('Design Distribution', {
 					},
 					callback: (r) => {
 						if(r.message){
-							console.log(r.message)
+							frappe.msgprint(`Discard entry ${r.message}`)
 						}
 					}
 				})

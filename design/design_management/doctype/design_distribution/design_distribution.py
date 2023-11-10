@@ -28,13 +28,14 @@ class DesignDistribution(Document):
 				if self.entry_type == 'Drawing Transfer':
 					# Produce design quantities
 					self.produceDesignQuantities(item)
-
 					# Transfer to Target
 					self.transferQuantities(item)
 					self.print_design_drawings_per_item(item)
+
 				elif self.entry_type == "Drawing Return":
 					# Transfer to Target
 					self.transferQuantities(item)
+
 				elif self.entry_type == "Drawing Discard":
 					self.discardDesignQuantities(item)
 				
@@ -142,23 +143,24 @@ class DesignDistribution(Document):
 			c.setFillColor(lightgrey)
 			c.setFont("Helvetica", 16)
 
-				# Calculate the optimal number of columns based on text length
+			# Calculate the optimal number of columns based on text length
 			max_string_width = max([float(c.stringWidth(line, "Helvetica", 16)) for line in text.split('\n')])
 			num_columns = min(3, int(float(page_width) / max_string_width))  # Maximum 3 columns
-				# Calculate the column spacing
+			
+			# Calculate the column spacing
 			column_spacing = float(page_width) / num_columns
 
 			for column in range(num_columns):
-					# Calculate the x-coordinate for each column
+				# Calculate the x-coordinate for each column
 				x = column * column_spacing
 
-					# Calculate the y-coordinate to start at the top and move down
+				# Calculate the y-coordinate to start at the top and move down
 				y = float(page_height)
 
 				lines = text.split('\n')
 				line_height = 16  # Initial line height
 				for line in lines:
-						# Calculate the string width and adjust line height if needed
+					# Calculate the string width and adjust line height if needed
 					string_width = float(c.stringWidth(line, "Helvetica", 18))
 					if string_width > column_spacing:
 						line_height =  4 # Reduce line height for long text
@@ -176,11 +178,11 @@ class DesignDistribution(Document):
 
 			return packet
 		if item.item_code:
-			file_url = frappe.db.get_value('File', {'attached_to_name': item.item_code}, ['file_url'])
+			file_url = frappe.db.get_value('File', {'attached_to_doctype': 'Item', 'attached_to_name': item.item_code}, ['file_url'])
 			if file_url:
-				file_url = "/home/rehan/frappe-bench/sites/design_dev/public"+file_url
-				item.path_c = file_url
-				output = "/home/rehan/Output.pdf"
+				file_url = frappe.db.get_single_value('Design Print Settings', 'public')+file_url
+				#item.path = file_url
+				output = frappe.db.get_single_value('Design Print Settings', 'output')
 				label = item.t_warehouse
 				#start
 				packet = io.BytesIO()
@@ -188,7 +190,7 @@ class DesignDistribution(Document):
 				pdf_reader = PdfFileReader(file_url)
 				pdf_writer = PdfFileWriter()
 
-				opacity = float(frappe.form_dict.get('opacity', 0.9))
+				opacity = frappe.db.get_single_value('Design Print Settings', 'opacity')
 			
 				for page_num in range(pdf_reader.getNumPages()):
 					# Create a watermark canvas for the current page
@@ -207,30 +209,32 @@ class DesignDistribution(Document):
 				output_pdf = BytesIO()
 				pdf_writer.write(output_pdf)
 				output_pdf.seek(0)
-				outputStream = open("/home/rehan/Output.pdf", "wb")
+				outputStream = open(frappe.db.get_single_value('Design Print Settings', 'output'), "wb")
 				pdf_writer.write(outputStream)
 				outputStream.close()
 				#end
-				if item.qty > 0:
-					subprocess.run(["lp", "-n", str(item.qty), "-o", item.orientation, "-o", 'media='+item.pdf_print_size, "/home/rehan/Output.pdf"])
-					frappe.msgprint('Print')
+				
+				# Check if item.orientation is present
+				if item.orientation:
+					orientation_option = item.orientation
 				else:
-					frappe.msgprint('Print Qty Cannot be Zero')
+					default_orientation = frappe.db.get_single_value('Design Print Settings', 'orientation')
+					orientation_option = default_orientation
+				# Check if item.paper_size is present
+				if item.paper_size:
+					paper_size_option = item.paper_size
+				else:
+					default_paper_size_option = frappe.db.get_single_value('Design Print Settings', 'paper_size')
+					paper_size_option = default_paper_size_option
+
+				if item.qty > 0:
+					#subprocess.run(["lp", "-n", str(item.qty), orientation_option, paper_size_option, "/home/rehan/Output.pdf"])
+					subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media='+paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
+					frappe.msgprint('Printing')
+				else:
+					frappe.msgprint('Print qty cannot be zero')
 			else:
-				frappe.throw('Drawing Not Uploded in Item '+'<b>'+item.item_code)
-	# def combine_pdfs(pdf_list):
-	# 	pdf_writer = PdfFileWriter()
-	# 	for pdf_data in pdf_list:
-	# 		pdf_reader = PdfFileReader(BytesIO(pdf_data))
-	# 		for page_num in range(pdf_reader.getNumPages()):
-	# 			page = pdf_reader.getPage(page_num)
-	# 			pdf_writer.addPage(page)
-
-	# 	combined_pdf = BytesIO()
-	# 	pdf_writer.write(combined_pdf)
-	# 	combined_pdf.seek(0)
-
-	# 	return combined_pdf.getvalue()
+				frappe.throw(f'Drawing Not Uploaded in Item <b>{item.item_code}</b>')
 
 @frappe.whitelist()	
 def ping():
@@ -249,6 +253,7 @@ def create_discard_entry():
 	})
 	new_dle_entry.insert(ignore_permissions=True, ignore_mandatory=True)
 	new_dle_entry.save()
+	return new_dle_entry.name
 # @frappe.whitelist()
 # def update_received_qty():
 # 	received_qty = frappe.db.get_value('Design Distribution Item', frappe.form_dict.id, 'received_qty')

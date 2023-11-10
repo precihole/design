@@ -1,5 +1,4 @@
 {
- "_liked_by": "[\"Administrator\"]",
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series:",
@@ -112,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-08 12:10:41.571778",
+ "modified": "2023-11-10 12:56:21.639635",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Distribution",
@@ -134,6 +133,19 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Transferred"
+  },
+  {
+   "color": "Orange",
+   "title": "Returned"
+  },
+  {
+   "color": "Purple",
+   "title": "Discarded"
+  }
+ ],
  "track_changes": 1
 }
