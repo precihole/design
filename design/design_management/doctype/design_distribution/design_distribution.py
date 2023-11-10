@@ -16,6 +16,7 @@ import json
 
 class DesignDistribution(Document):
 	def before_save(self):
+		self.custom_validations()
 		if self.entry_type == 'Drawing Transfer':
 			self.item_stock_summary()
 	
@@ -41,6 +42,17 @@ class DesignDistribution(Document):
 				
 	def on_cancel(self):
 		self.cancel_dle_entry()
+
+	def custom_validations(self):
+		for item in self.items:
+			if item.s_warehouse == item.t_warehouse:
+				frappe.throw(_("Source and target warehouse cannot be the same for row {0}").format(item.idx))
+			if item.qty == 0:
+				frappe.throw(_("Row {0}: Qty is mandatory").format(item.idx), title=_("Zero quantity"))
+			if self.entry_type != "Drawing Transfer":
+				qty = frappe.db.get_value('Design Ledger Entry', {'item_code': item.item_code, 'warehouse': item.s_warehouse, 'revision_no': item.revision, 'is_cancelled': 0}, ['qty_after_transaction']) or 0
+				if item.qty > qty:
+					frappe.throw('No qty available')
 
 	def produceDesignQuantities(self, item):
 		if item.qty > 0:
