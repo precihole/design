@@ -8,23 +8,27 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "default",
+  "printer_details",
   "printer_list",
+  "default",
+  "column_break_f2qn1",
+  "set_default",
+  "printer_status",
+  "ip_address",
   "column_break_4",
-  "check_status",
-  "ip_address"
+  "check_status"
  ],
  "fields": [
   {
    "fieldname": "default",
    "fieldtype": "Data",
-   "label": "Default Printer",
+   "label": "Server Default Printer",
    "read_only": 1
   },
   {
    "fieldname": "printer_list",
    "fieldtype": "Select",
-   "label": "Printer List"
+   "label": "Server Printer List"
   },
   {
    "fieldname": "column_break_4",
@@ -38,13 +42,32 @@
   {
    "fieldname": "ip_address",
    "fieldtype": "Data",
-   "label": "ip address"
+   "label": "IP Address"
+  },
+  {
+   "fieldname": "printer_status",
+   "fieldtype": "Section Break",
+   "label": "Printer Status"
+  },
+  {
+   "fieldname": "column_break_f2qn1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "printer_details",
+   "fieldtype": "Section Break",
+   "label": "Printer Details"
+  },
+  {
+   "fieldname": "set_default",
+   "fieldtype": "Button",
+   "label": "Set Default"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-08 12:13:32.537549",
+ "modified": "2023-11-10 09:40:23.638134",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Print Settings",
@@ -63,5 +86,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
