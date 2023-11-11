@@ -26,12 +26,14 @@
  ],
  "fields": [
   {
+   "description": "This is the default printer of the server.",
    "fieldname": "default",
    "fieldtype": "Data",
    "label": "Server Default Printer",
    "read_only": 1
   },
   {
+   "description": "This will show all list of connected printers to the server.",
    "fieldname": "printer_list",
    "fieldtype": "Select",
    "label": "Server Printer List"
@@ -46,6 +48,7 @@
    "label": "Check Status"
   },
   {
+   "description": "Enter ip address of the printer if you want to check printer is connected or not.",
    "fieldname": "ip_address",
    "fieldtype": "Data",
    "label": "IP Address"
@@ -65,6 +68,7 @@
    "label": "Printer Details"
   },
   {
+   "description": "Click on this button if you want to set another printer as default printer.",
    "fieldname": "set_default",
    "fieldtype": "Button",
    "label": "Set Default"
@@ -75,16 +79,19 @@
    "label": "Server File Path"
   },
   {
+   "description": "This is the public folder path.",
    "fieldname": "public",
    "fieldtype": "Data",
    "label": "Public path"
   },
   {
+   "description": "This is the output file path.",
    "fieldname": "output",
    "fieldtype": "Data",
    "label": "output path"
   },
   {
+   "description": "This is the opacity of watermark of the drawings.",
    "fieldname": "opacity",
    "fieldtype": "Float",
    "label": "Opacity"
@@ -96,6 +103,7 @@
   },
   {
    "default": "A4",
+   "description": "This is the page size of the drawings.\nIf item doesn't have page size then system will take this as default page size.",
    "fieldname": "paper_size",
    "fieldtype": "Select",
    "label": "Paper Size",
@@ -103,6 +111,7 @@
   },
   {
    "default": "Portrait",
+   "description": "This is the orientation of the drawings.\nIf item doesn't have orientation then system will take this as default orientation.",
    "fieldname": "orientation",
    "fieldtype": "Select",
    "label": "Orientation",
@@ -112,7 +121,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-10 12:32:04.541869",
+ "modified": "2023-11-11 12:27:39.875083",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Print Settings",
