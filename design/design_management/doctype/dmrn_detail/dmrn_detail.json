@@ -20,6 +20,7 @@
  "fields": [
   {
    "columns": 2,
+   "description": "Existing Drawing No. of the Drawing being revised.",
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -29,6 +30,7 @@
   },
   {
    "columns": 1,
+   "description": "New Revision No. of the Drawing No. being revised.",
    "fetch_from": "drawing_no.revision_c",
    "fieldname": "new_revision",
    "fieldtype": "Data",
@@ -39,6 +41,7 @@
   {
    "columns": 2,
    "default": "Today",
+   "description": "Release Date of the Existing Drawing.",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -51,6 +54,7 @@
   },
   {
    "columns": 3,
+   "description": "Briefly describe the reason for change in drawing.",
    "fieldname": "change_reason",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -58,12 +62,14 @@
   },
   {
    "columns": 2,
+   "description": "Briefly describe the nature of change made to the drawing.",
    "fieldname": "change_nature",
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Nature of Change"
   },
   {
+   "description": "Final Action Taken (Eg. Revision R1 Released / Drawing Replaced with (Drawing No.).",
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
@@ -72,8 +78,7 @@
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "new_drawing",
    "fieldtype": "Attach",
-   "label": "New Drawing Pdf",
-   "mandatory_depends_on": "eval:!doc.__islocal && doc.workflow_state == 'Approval Pending'"
+   "label": "New Drawing Pdf"
   },
   {
    "description": "This is previous revision before submitting this entry.",
@@ -86,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-10 16:58:42.785801",
+ "modified": "2023-11-11 11:42:29.635505",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN Detail",

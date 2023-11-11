@@ -11,11 +11,12 @@
   "originator",
   "from_department",
   "design_engineer",
-  "remarks",
+  "old_drawing_pdf",
   "column_break_5",
   "posting_date",
   "originator_name",
   "to_department",
+  "drawn_by",
   "type",
   "reference_no",
   "dmrn_details_section",
@@ -99,12 +100,6 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Remarks"
-  },
-  {
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "Modification Type",
@@ -115,12 +110,23 @@
    "fieldtype": "Table",
    "label": "Details",
    "options": "DMRN Detail"
+  },
+  {
+   "fieldname": "drawn_by",
+   "fieldtype": "Link",
+   "label": "Original Drawn By",
+   "options": "User"
+  },
+  {
+   "fieldname": "old_drawing_pdf",
+   "fieldtype": "Attach",
+   "label": "Old Drawing PDF"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 22:03:35.805137",
+ "modified": "2023-11-11 11:36:32.165387",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "DMRN",

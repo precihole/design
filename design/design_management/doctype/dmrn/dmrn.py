@@ -16,9 +16,6 @@ class DMRN(Document):
 		self.update_new_revision()
 		for item in self.dmrn_details:
 			self.link_new_drawing(item)
-		
-		#delete new drawing from DMRN
-		frappe.db.delete("File", {"attached_to_doctype": self.doctype, 'attached_to_name': self.name})
 	
 	def on_cancel(self):
 		self.delete_revision()
@@ -27,6 +24,10 @@ class DMRN(Document):
 	def custom_validations(self):
 		if self.dmrn_details:
 			for item in self.dmrn_details:
+				#new drawing validation
+				if self.get('__islocal') == None and not item.new_drawing:
+					frappe.throw(f'New Drawing is mandatory in {item.item_code}')
+					
 				old_revision = frappe.db.get_value('Item', item.item_code, 'revision_c')
 				if old_revision:
 					if item.new_revision:
@@ -75,6 +76,8 @@ class DMRN(Document):
 				"attached_to_name": item.item_code
 			})
 			link_drawing_to_item.insert(ignore_permissions=True,ignore_mandatory=True)
+		#delete new drawing from DMRN
+		frappe.db.delete("File", {"attached_to_doctype": self.doctype, 'attached_to_name': self.name, 'file_url': item.new_drawing})
 
 	def delete_revision(self):
 		frappe.db.delete("Revision", {"reference_no": self.name})
