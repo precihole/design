@@ -29,20 +29,29 @@ frappe.ui.form.on('Design Distribution', {
 				}
 			}
 			if(cur_frm.doc.summary.length > 0){
-					
-			cur_frm.add_custom_button(__("Drawing Discard"), function() {
-				frappe.call({
-					method: 'design.design_management.doctype.design_distribution.design_distribution.create_discard_entry',
-					args: {
-						design_distribution: frm.doc.name,
-						summary: frm.doc.summary
-					},
-					callback: (r) => {
-						if(r.message){
-							frappe.msgprint(`Discard entry ${r.message}`)
-						}
-					}
-				})
+			
+			frappe.db.get_list(frm.doc.doctype, {
+				fields: ['name'],
+				filters: {
+					"design_distribution": frm.doc.name
+				}
+			}).then(records => {
+				if(records.length === 0 ){
+					frm.add_custom_button(__("Drawing Discard"), function() {
+						frappe.call({
+							method: 'design.design_management.doctype.design_distribution.design_distribution.create_discard_entry',
+							args: {
+								design_distribution: frm.doc.name,
+								summary: frm.doc.summary
+							},
+							callback: (r) => {
+								if(r.message){
+									console.log(r.message)
+								}
+							}
+						})
+					})
+				}
 			})
 		}
 			// console.log(remove_flag)

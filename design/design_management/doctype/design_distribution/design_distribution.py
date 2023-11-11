@@ -241,7 +241,7 @@ class DesignDistribution(Document):
 
 				if item.qty > 0:
 					#subprocess.run(["lp", "-n", str(item.qty), orientation_option, paper_size_option, "/home/rehan/Output.pdf"])
-					subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media='+paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
+					#subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media='+paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
 					frappe.msgprint('Printing')
 				else:
 					frappe.msgprint('Print qty cannot be zero')
@@ -265,7 +265,7 @@ def create_discard_entry():
 	})
 	new_dle_entry.insert(ignore_permissions=True, ignore_mandatory=True)
 	new_dle_entry.save()
-	return new_dle_entry.name
+	frappe.msgprint(f'Discard entry Created <a href="{frappe.utils.get_url()}/app/design-distribution/{new_dle_entry.name}">{new_dle_entry.name}</a>')
 # @frappe.whitelist()
 # def update_received_qty():
 # 	received_qty = frappe.db.get_value('Design Distribution Item', frappe.form_dict.id, 'received_qty')
