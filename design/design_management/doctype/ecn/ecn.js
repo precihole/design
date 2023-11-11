@@ -6,6 +6,7 @@ frappe.ui.form.on('ECN', {
 		if(frm.doc.docstatus == 1){
 			cur_frm.add_custom_button(__("Create DMRN"), function() {
 				frappe.route_options = {
+					'from_department': frm.doc.department,
 					'reference_no': frm.doc.name
 				};
 				frappe.set_route('Form','DMRN',"new-dmrn-1");
