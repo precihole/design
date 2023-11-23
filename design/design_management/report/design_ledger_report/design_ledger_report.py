@@ -1,51 +1,24 @@
 # Copyright (c) 2022, Rehan Ansari and contributors
 # For license information, please see license.txt
 
-from cgi import test
-from pickletools import read_uint1
 import frappe
 
 
 def execute(filters=None):
-	## First, fetch your base data results using normal api calls
-	## We can also access `filters`, defined by either the table above or the client script below
-	results = frappe.db.get_all('Design Ledger Entry', ['*'],filters=filters,order_by='creation asc')
-	design_ledger = [ dic for dic in results if dic.is_cancelled == 0]
-	# Then, for fun, let's define a new property programmatically
-	qty_change=0
-	for result in design_ledger:
-		if result.qty_change > 0:
-			result.in_qty = result.qty_change
+	results = frappe.db.get_all('Design Ledger Entry', ['*'], filters=filters, order_by='creation asc')
+	dl_entries = [ dic for dic in results if dic.is_cancelled == 0]
+
+	qty_change = 0
+	for gle in dl_entries:
+		if gle.qty_change > 0:
+			gle.in_qty = gle.qty_change
 		else:
-			result.in_qty=0.00
-		if result.qty_change < 0:
-			result.out_qty = result.qty_change
+			gle.in_qty = 0.00
+		if gle.qty_change < 0:
+			gle.out_qty = gle.qty_change
 		else:
-			result.out_qty=0.00
-		for i in design_ledger:
-			if i.revision == result.revision:
-				if result.in_qty:
-					qty_change = result.in_qty
-					break
-				elif result.out_qty:
-					if i.voucher_no == result.voucher_no:
-						ledger_entry = frappe.db.get_list('Design Ledger Entry',
-							filters={
-								'revision': i.revision,
-								'is_cancelled': 0,
-								'warehouse': i.warehouse
-							},
-							fields=['item_code','revision_no','warehouse','qty_after_transaction'],
-							order_by='creation asc',
-						)
-						qty_change = ledger_entry[0].qty_after_transaction
-					else:
-						qty_change = result.out_qty + qty_change
-					break
-				else:
-					qty_change = qty_change + result.qty_change
-					break
-		result.balance_qty = qty_change
+			gle.out_qty = 0.00
+		gle.balance_qty = gle.qty_after_transaction
 	# dle = frappe.qb.DocType("Design Ledger Entry")
 	# query = (
 	# 	frappe.qb.from_(dle)
@@ -74,20 +47,6 @@ def execute(filters=None):
 	Inventory = [user for user in results if user.warehouse == "Inventory"]
 	Design = [user for user in results if user.warehouse == "Design"]
 
-	report_summary = [
-		{
-			"value": (frappe.utils.nowdate()),
-			"label": "Report Date",
-			"datatype": "Data",
-		},
-		{
-			"value": len(results),
-			"label": "Total users",
-			"datatype": "Data",
-		}
-	]
-	## Finally, define your columns. Many of the usual field definition properties are available here for use.
-	## If you wanted to, you could also specify these columns in the child table above.
 	columns = [
 		{
 			'fieldname': 'posting_date',
@@ -151,6 +110,5 @@ def execute(filters=None):
 		},
 	]
 
-	## finally, we assemble it all together
-	data = columns, design_ledger, message, report_summary
+	data = columns, dl_entries, message
 	return data
