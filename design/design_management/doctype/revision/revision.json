@@ -21,8 +21,7 @@
    "fetch_if_empty": 1,
    "fieldname": "item_name",
    "fieldtype": "Data",
-   "label": "Item Name",
-   "read_only": 1
+   "label": "Item Name"
   },
   {
    "fieldname": "reference_no",
@@ -41,7 +40,6 @@
    "in_list_view": 1,
    "label": "Item Code",
    "options": "Item",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -60,13 +58,12 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Revision",
-   "read_only": 1,
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-07 23:25:34.027545",
+ "modified": "2023-11-28 10:43:03.761781",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Revision",

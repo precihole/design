@@ -22,6 +22,15 @@
   "docstatus": 0,
   "doctype": "Design Warehouse",
   "modified": "2022-09-10 13:13:26.260779",
+  "name": "Design",
+  "status": "Enabled",
+  "warehouse": "Design"
+ },
+ {
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Design Warehouse",
+  "modified": "2022-09-10 13:13:26.260779",
   "name": "Stores",
   "status": "Enabled",
   "warehouse": "Stores"
