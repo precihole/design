@@ -112,9 +112,10 @@
    "read_only": 1
   },
   {
+   "description": "Change requested by which department",
    "fieldname": "department",
    "fieldtype": "Link",
-   "label": "Department",
+   "label": "From Department",
    "options": "Department",
    "reqd": 1
   }
@@ -122,7 +123,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-11 11:18:00.492119",
+ "modified": "2023-11-28 10:22:54.562742",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "ECN",
