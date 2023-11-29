@@ -25,13 +25,18 @@ class DesignDistribution(Document):
 
 	def on_submit(self):
 		if self.items:
+			check_warehouse = None
 			for item in self.items:
 				if self.entry_type == 'Drawing Transfer':
 					# Produce design quantities
 					self.produceDesignQuantities(item)
 					# Transfer to Target
 					self.transferQuantities(item)
+					if check_warehouse != None and check_warehouse != item.t_warehouse:
+						#frappe.msgprint('Print Blank')
+						subprocess.run(["lp", "/home/rehan/Downloads/blank.pdf"])
 					self.print_design_drawings_per_item(item)
+					check_warehouse = item.t_warehouse
 
 				elif self.entry_type == "Drawing Return":
 					# Transfer to Target
