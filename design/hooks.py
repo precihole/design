@@ -188,5 +188,6 @@ app_license = "MIT"
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["fieldname", "=", "revision_c"]]},
-    {"dt": "Workflow", "filters": [["name", "in", ["ECN", "DMRN"]]]}
+    {"dt": "Workflow", "filters": [["name", "in", ["ECN", "DMRN"]]]},
+    {"dt": "Workflow State", "filters": [["name", "in", ["Draft", "Approval Pending", "Cancelled"]]]}
 ]

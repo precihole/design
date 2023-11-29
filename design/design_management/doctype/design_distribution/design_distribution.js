@@ -2,6 +2,20 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Design Distribution', {
+	before_save: function(frm) {
+		
+		// Sort items based on target warehouse before saving
+		frm.doc.items.sort(function(a, b) {
+			return a.t_warehouse.localeCompare(b.t_warehouse) || a.idx - b.idx;
+		});
+		
+		// Update index numbers after sorting
+		frm.doc.items.forEach(function(item, index) {
+			item.idx = index + 1;
+		});
+		
+		frm.refresh_field('items');
+	},
 	refresh: function(frm) {
 		if(frm.doc.__islocal && frm.doc.reference_no){
 			frappe.model.with_doc("DMRN", frm.doc.reference_no, function() {

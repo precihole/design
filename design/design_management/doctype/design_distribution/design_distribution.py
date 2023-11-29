@@ -19,19 +19,24 @@ class DesignDistribution(Document):
 		self.custom_validations()
 		if self.entry_type == 'Drawing Transfer':
 			self.item_stock_summary()
-	
+
 	def before_submit(self):
 		self.set_status()
 
 	def on_submit(self):
 		if self.items:
+			check_warehouse = None
 			for item in self.items:
 				if self.entry_type == 'Drawing Transfer':
 					# Produce design quantities
 					self.produceDesignQuantities(item)
 					# Transfer to Target
 					self.transferQuantities(item)
+					if check_warehouse != None and check_warehouse != item.t_warehouse:
+						#frappe.msgprint('Print Blank')
+						subprocess.run(["lp", "/home/rehan/Downloads/blank.pdf"])
 					self.print_design_drawings_per_item(item)
+					check_warehouse = item.t_warehouse
 
 				elif self.entry_type == "Drawing Return":
 					# Transfer to Target
@@ -168,7 +173,6 @@ class DesignDistribution(Document):
 
 				# Calculate the y-coordinate to start at the top and move down
 				y = float(page_height)
-
 				lines = text.split('\n')
 				line_height = 16  # Initial line height
 				for line in lines:
@@ -176,7 +180,6 @@ class DesignDistribution(Document):
 					string_width = float(c.stringWidth(line, "Helvetica", 18))
 					if string_width > column_spacing:
 						line_height =  4 # Reduce line height for long text
-
 					while y > 0:
 						c.saveState()
 						c.translate(float(x), float(y))  # Cast to float to avoid the TypeError
@@ -184,16 +187,14 @@ class DesignDistribution(Document):
 						c.drawString(0, 0, line)
 						c.restoreState()
 						y -= line_height  # Adjust the vertical spacing based on line height
-
 			c.save()
 			packet.seek(0)
-
 			return packet
+			
 		if item.item_code:
 			file_url = frappe.db.get_value('File', {'attached_to_doctype': 'Item', 'attached_to_name': item.item_code}, ['file_url'])
 			if file_url:
-				file_url = frappe.db.get_single_value('Design Print Settings', 'public')+file_url
-				#item.path = file_url
+				file_url = frappe.db.get_single_value('Design Print Settings', 'public') + file_url
 				output = frappe.db.get_single_value('Design Print Settings', 'output')
 				label = item.t_warehouse
 				#start
@@ -201,9 +202,7 @@ class DesignDistribution(Document):
 				# create a new PDF with Reportlab
 				pdf_reader = PdfFileReader(file_url)
 				pdf_writer = PdfFileWriter()
-
 				opacity = frappe.db.get_single_value('Design Print Settings', 'opacity')
-			
 				for page_num in range(pdf_reader.getNumPages()):
 					# Create a watermark canvas for the current page
 					page = pdf_reader.getPage(page_num)
@@ -215,9 +214,7 @@ class DesignDistribution(Document):
 					watermark_pdf = PdfFileReader(watermark_canvas)
 					watermark_page = watermark_pdf.getPage(0)
 					page.mergePage(watermark_page)
-
 					pdf_writer.addPage(page)
-
 				output_pdf = BytesIO()
 				pdf_writer.write(output_pdf)
 				output_pdf.seek(0)
@@ -232,6 +229,7 @@ class DesignDistribution(Document):
 				else:
 					default_orientation = frappe.db.get_single_value('Design Print Settings', 'orientation')
 					orientation_option = default_orientation
+					
 				# Check if item.paper_size is present
 				if item.paper_size:
 					paper_size_option = item.paper_size
@@ -241,7 +239,7 @@ class DesignDistribution(Document):
 
 				if item.qty > 0:
 					#subprocess.run(["lp", "-n", str(item.qty), orientation_option, paper_size_option, "/home/rehan/Output.pdf"])
-					#subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media='+paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
+					#subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media=' + paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
 					frappe.msgprint('Printing')
 				else:
 					frappe.msgprint('Print qty cannot be zero')
