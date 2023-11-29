@@ -46,9 +46,9 @@ class DesignDistribution(Document):
 	def custom_validations(self):
 		for item in self.items:
 			if item.s_warehouse == item.t_warehouse:
-				frappe.throw(_("Source and target warehouse cannot be the same for row {0}").format(item.idx))
+				frappe.throw(("Source and target warehouse cannot be the same for row {0}").format(item.idx))
 			if item.qty == 0:
-				frappe.throw(_("Row {0}: Qty is mandatory").format(item.idx), title=_("Zero quantity"))
+				frappe.throw(("Row {0}: Qty is mandatory").format(item.idx), title=("Zero quantity"))
 			if self.entry_type != "Drawing Transfer":
 				qty = frappe.db.get_value('Design Ledger Entry', {'item_code': item.item_code, 'warehouse': item.s_warehouse, 'revision_no': item.revision, 'is_cancelled': 0}, ['qty_after_transaction']) or 0
 				if item.qty > qty:
