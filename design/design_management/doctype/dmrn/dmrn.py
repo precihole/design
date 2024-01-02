@@ -1,55 +1,36 @@
 # Copyright (c) 2022, Rehan Ansari and contributors
 # For license information, please see license.txt
-
-
+# by SHUBHAM
 import frappe
 from frappe.model.document import Document
-import os
-import subprocess, sys
-import tempfile
-from PyPDF2 import PdfFileWriter, PdfFileReader, PdfReader, PdfWriter
-import io
-from io import BytesIO
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.lib.colors import lightgrey
-import json
-from frappe.utils.pdf import get_pdf
+from io import BytesIO
+import fitz  # PyMuPDF
 
 class DMRN(Document):
 
-
     def on_update(self):
-       # frappe.throw("hskdjfkldjsfsdjklfmsdklfj")
-        # Check if the document is in the "Draft" workflow state
         if self.workflow_state == "Approved" and self.dmrn_details:
-            frappe.throwE('HIII ERROR')
             for item in self.dmrn_details:
                 if item.new_drawing:
-                    # Get the full name from the "approved_by" field in the parent document
-                    approved_by_fullname = self.approved_by
-
-                    # Construct the complete URL by appending the dynamic path
+                    approved_by_fullname = frappe.session.user
                     complete_url = item.new_drawing
-
-                    # Get the path on the server
                     pdf_file_path = frappe.db.get_single_value('Design Print Settings', 'public') + complete_url
-                    #frappe.msgprint(f"Generated PDF file path: {pdf_file_path}")
+
+                    user_signature_path = frappe.db.get_single_value('Design Print Settings', 'public') + "/files/" + self.approved_by + ".png"
+                    modified_signature_path = user_signature_path.replace(".com", "")
 
                     # Create a watermarked PDF (using the same file name and path)
                     watermarked_pdf_path = pdf_file_path
-                    self.add_watermark(pdf_file_path, approved_by_fullname, watermarked_pdf_path)
-                    #frappe.msgprint(f"Generated watermarked PDF file path: {watermarked_pdf_path}")
+                    self.add_watermark(pdf_file_path, approved_by_fullname, modified_signature_path, watermarked_pdf_path)
 
-                    # Delete the original PDF
-                    #frappe.delete_file(item.new_drawing)
+    def add_watermark(self, pdf_file_path, text_watermark, image_watermark_path, output_path):
+        # Open the original PDF using PyMuPDF
+        original_doc = fitz.open(pdf_file_path)
 
-                    # Upload the watermarked PDF to the same URL
-                    #frappe.uploadfile(file_url=complete_url, content=frappe.read_file(watermarked_pdf_path))
-
-    def add_watermark(self, pdf_file_path, watermark_text, output_path):
         with open(pdf_file_path, 'rb') as original_file:
-            original_pdf = PdfReader(original_file)
+            original_pdf = PdfFileReader(original_file)
 
             # Create a BytesIO buffer to store the modified PDF
             output_buffer = BytesIO()
@@ -58,13 +39,20 @@ class DMRN(Document):
             for page_num in range(len(original_pdf.pages)):
                 original_page = original_pdf.pages[page_num]
 
+                # Get dimensions of the page using PyMuPDF
+                page_width = int(original_page.mediaBox.upperRight[0])
+                page_height = int(original_page.mediaBox.upperRight[1])
+                
+                # Create a new BytesIO buffer for each page
+                watermark_buffer = BytesIO()
+
                 # Create a watermark canvas for the current page
-                watermark_canvas = canvas.Canvas(BytesIO())
-                self.draw_watermark(watermark_canvas, watermark_text)
+                watermark_canvas = canvas.Canvas(watermark_buffer, pagesize=(page_width, page_height))
+                self.draw_watermark(watermark_canvas, image_watermark_path, text_watermark, page_width, page_height)
+                watermark_pdf = PdfFileReader(watermark_buffer)
+                watermark_page = watermark_pdf.pages[0]
 
                 # Merge the watermark canvas with the current page
-                watermark_pdf = PdfReader(BytesIO(watermark_canvas.getpdfdata()))
-                watermark_page = watermark_pdf.pages[0]
                 original_page.merge_page(watermark_page)
 
                 # Add the modified page to the new PDF buffer
@@ -78,17 +66,35 @@ class DMRN(Document):
             with open(output_path, 'wb') as output_file:
                 output_file.write(output_buffer.read())
 
-    def draw_watermark(self, canvas, text):
-        # Set font and size
-        canvas.setFont("Helvetica", 26)
 
+
+    def draw_watermark(self, canvas, image_path, text, page_width, page_height):
+        # Set font and size for text watermark
+        canvas.setFont("Helvetica", 16)
+        
         # Draw the watermark text on the canvas
-        canvas.drawString(350, 100, text)
-        canvas.save()
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
+        text_width = int(canvas.stringWidth(text, "Helvetica", 16))
+        text_height = 26
 
+        text_x = int(page_width - text_width - 20)
+        #text_y = int(img_y + img_height + 10)
+        text_y = int(20)
+        canvas.drawString(text_x, text_y, text)
+
+        # Draw the transparent image on the canvas
+        img_width = 100
+        img_height = 50
+
+        img_x = int(page_width - img_width - 20)
+        img_y = int(20)
+        img_y = int(text_y + text_height + 20)
+        canvas.drawImage(image_path, img_x, img_y, width=img_width, height=img_height, mask='auto')
+        canvas.save()
+
+
+
+###########################################################################################################################
+#by rehan
     
     def before_save(self):
         #frappe.throw("your can not save")

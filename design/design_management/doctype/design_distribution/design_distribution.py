@@ -13,6 +13,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.colors import lightgrey
 import json
+from frappe.utils.pdf import get_pdf
 
 class DesignDistribution(Document):
 	def before_save(self):
@@ -24,6 +25,32 @@ class DesignDistribution(Document):
 		self.set_status()
 
 	def on_submit(self):
+		def download_pdf(doctype, name, format=None, doc=None):
+			# frappe.msgprint(str(doc))
+			html = frappe.get_print(doctype, name, format, doc=doc)
+			pdf_content = get_pdf(html)
+
+			# Specify the full path where you want to save the PDF file
+			pdf_path = "/home/erpadmin/frappe-bench/sites/preciholesports/public/files/output.pdf"
+
+			# Save the PDF file
+			with open(pdf_path, "wb") as pdf_file:
+				pdf_file.write(pdf_content)
+			# return frappe.msgprint("printing")
+			return subprocess.run(["lp", "-n", "1", "-o", "Potrait", "-o", 'media=A4', pdf_path])
+		# def download_pdf(doctype, name, format=None,doc= None,no_letterhead=0, language=None, letterhead=None):
+		# 	# frappe.throw(str(doctype))
+		# 	html = frappe.get_print(doctype, name, format, doc=doc, as_pdf=True, letterhead=letterhead, no_letterhead=no_letterhead)
+		# 	pdf_content = get_pdf(html)
+
+		# 	# Specify the full path where you want to save the PDF file
+		# 	pdf_path = "/home/erpadmin/frappe-bench/sites/preciholesports/public/files/pdf_file.pdf"
+
+		# 	# Save the PDF file
+		# 	with open(pdf_path, "wb") as pdf_file:
+		# 		pdf_file.write(pdf_content)
+		# 	return frappe.msgprint("done")
+		# 	# return subprocess.run(["lp", "-n", "1", "-o", "Potrait", "-o", 'media=A4', pdf_path])	
 		if self.items:
 			check_warehouse = None
 			for item in self.items:
@@ -33,7 +60,7 @@ class DesignDistribution(Document):
 					# Transfer to Target
 					self.transferQuantities(item)
 					if check_warehouse != None and check_warehouse != item.t_warehouse:
-						#frappe.msgprint('Print Blank')
+						frappe.msgprint('Print Blank')
 						subprocess.run(["lp", "/home/rehan/Downloads/blank.pdf"])
 					self.print_design_drawings_per_item(item)
 					check_warehouse = item.t_warehouse
@@ -44,7 +71,13 @@ class DesignDistribution(Document):
 
 				elif self.entry_type == "Drawing Discard":
 					self.discardDesignQuantities(item)
-				
+				# get dmrn of item if there is then print it with item
+				get_drmn = frappe.db.get_value("DMRN Detail",{"item_code":item.item_code,"new_revision":item.revision},"parent")	
+				# This is to update pdf
+				if get_drmn:
+					download_pdf("DMRN",str(get_drmn))
+		
+
 	def on_cancel(self):
 		self.cancel_dle_entry()
 
@@ -238,9 +271,9 @@ class DesignDistribution(Document):
 					paper_size_option = default_paper_size_option
 
 				if item.qty > 0:
-					#subprocess.run(["lp", "-n", str(item.qty), orientation_option, paper_size_option, "/home/rehan/Output.pdf"])
-					#subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media=' + paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
-					frappe.msgprint('Printing')
+					# subprocess.run(["lp", "-n", str(item.qty), orientation_option, paper_size_option, "/home/rehan/Output.pdf"])
+					subprocess.run(["lp", "-n", str(item.qty), "-o", orientation_option, "-o", 'media=' + paper_size_option, frappe.db.get_single_value('Design Print Settings', 'output')])
+					# frappe.msgprint('Printing')
 				else:
 					frappe.msgprint('Print qty cannot be zero')
 			else:
