@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-22 14:11:10.873709",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "file_url",
+  "views",
+  "column_break_snvxm",
+  "attached_to_doctype",
+  "attached_to_name",
+  "from_date",
+  "to_date",
+  "allow_download"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "file_url",
+   "fieldtype": "Code",
+   "label": "File URL"
+  },
+  {
+   "fieldname": "attached_to_doctype",
+   "fieldtype": "Link",
+   "label": "Attached To DocType",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Datetime",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Datetime",
+   "label": "To Date"
+  },
+  {
+   "fieldname": "views",
+   "fieldtype": "Int",
+   "label": "Views"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_download",
+   "fieldtype": "Check",
+   "label": "Allow Download"
+  },
+  {
+   "fieldname": "attached_to_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Attached To Name",
+   "options": "attached_to_doctype"
+  },
+  {
+   "fieldname": "column_break_snvxm",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-22 14:14:39.366956",
+ "modified_by": "Administrator",
+ "module": "Design Management",
+ "name": "Drawing Permission",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
