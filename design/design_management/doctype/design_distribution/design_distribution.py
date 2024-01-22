@@ -26,7 +26,7 @@ class DesignDistribution(Document):
 
 	def on_submit(self):
 		def download_pdf(doctype, name, format=None, doc=None):
-			# frappe.msgprint(str(doc))
+			# this is to get dmrn print
 			html = frappe.get_print(doctype, name, format, doc=doc)
 			pdf_content = get_pdf(html)
 
