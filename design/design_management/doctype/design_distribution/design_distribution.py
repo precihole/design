@@ -6,7 +6,7 @@ from frappe.model.document import Document
 import os
 import subprocess, sys
 import tempfile
-from PyPDF2 import PdfFileWriter, PdfFileReader
+# from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
 from io import BytesIO
 from reportlab.pdfgen import canvas

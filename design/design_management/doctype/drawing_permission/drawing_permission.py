@@ -1,8 +1,9 @@
 # Copyright (c) 2024, Precihole and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 class DrawingPermission(Document):
-	pass
+	def before_save(self):
+		self.file_url = frappe.utils.get_url() + self.file_url

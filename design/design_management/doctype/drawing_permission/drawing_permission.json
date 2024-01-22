@@ -30,12 +30,6 @@
    "label": "File URL"
   },
   {
-   "fieldname": "attached_to_doctype",
-   "fieldtype": "Link",
-   "label": "Attached To DocType",
-   "options": "DocType"
-  },
-  {
    "fieldname": "from_date",
    "fieldtype": "Datetime",
    "label": "From Date"
@@ -57,19 +51,25 @@
    "label": "Allow Download"
   },
   {
+   "fieldname": "column_break_snvxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attached_to_doctype",
+   "fieldtype": "Link",
+   "label": "Attached To DocType",
+   "options": "DocType"
+  },
+  {
    "fieldname": "attached_to_name",
    "fieldtype": "Dynamic Link",
    "label": "Attached To Name",
    "options": "attached_to_doctype"
-  },
-  {
-   "fieldname": "column_break_snvxm",
-   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-22 14:14:39.366956",
+ "modified": "2024-01-22 15:51:28.752674",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Drawing Permission",
