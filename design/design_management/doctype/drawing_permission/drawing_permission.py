@@ -9,4 +9,5 @@ class DrawingPermission(Document):
 		if not doc.item_code:
 			return
 		file_url = frappe.db.get_value('File', {'attached_to_doctype': 'Item', 'attached_to_name': doc.item_code}, ['file_url'])
-		self.file_url = frappe.utils.get_url() + file_url
+		if file_url:
+			self.file_url = frappe.utils.get_url() + file_url
