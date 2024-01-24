@@ -10,6 +10,7 @@
   "item_code",
   "file_url",
   "views",
+  "views_allowed",
   "status",
   "column_break_snvxm",
   "attached_to_doctype",
@@ -48,7 +49,8 @@
   {
    "fieldname": "views",
    "fieldtype": "Int",
-   "label": "Views"
+   "label": "Views",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -93,12 +95,18 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "description": "0 means supplier can view unlimited times.",
+   "fieldname": "views_allowed",
+   "fieldtype": "Int",
+   "label": "Views Allowed"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-24 13:25:55.485184",
+ "modified": "2024-01-24 17:24:16.279417",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Drawing Permission",
