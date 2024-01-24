@@ -10,31 +10,37 @@
   "item_code",
   "file_url",
   "views",
+  "status",
   "column_break_snvxm",
   "attached_to_doctype",
   "attached_to_name",
   "from_date",
   "to_date",
-  "allow_download"
+  "allow_download",
+  "amended_from"
  ],
  "fields": [
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
    "label": "Item Code",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "file_url",
    "fieldtype": "Code",
-   "label": "File URL"
+   "label": "File URL",
+   "read_only": 1
   },
   {
+   "depends_on": "eval:doc.__islocal == undefined && doc.file_url",
    "fieldname": "from_date",
    "fieldtype": "Datetime",
    "label": "From Date"
   },
   {
+   "depends_on": "eval:doc.__islocal == undefined && doc.file_url",
    "fieldname": "to_date",
    "fieldtype": "Datetime",
    "label": "To Date"
@@ -55,21 +61,44 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Supplier",
    "fieldname": "attached_to_doctype",
    "fieldtype": "Link",
    "label": "Attached To DocType",
-   "options": "DocType"
+   "options": "DocType",
+   "read_only": 1
   },
   {
    "fieldname": "attached_to_name",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
    "label": "Attached To Name",
-   "options": "attached_to_doctype"
+   "options": "attached_to_doctype",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "no_copy": 1,
+   "options": "\nDraft\nReady to Share\nTime-Limited Shared\nShared\nExpired\nArchived",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Drawing Permission",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-01-22 15:51:28.752674",
+ "modified": "2024-01-24 13:25:55.485184",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Drawing Permission",
@@ -90,5 +119,30 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Blue",
+   "title": "Draft"
+  },
+  {
+   "color": "Cyan",
+   "title": "Ready to Share"
+  },
+  {
+   "color": "Gray",
+   "title": "Time-Limited Shared"
+  },
+  {
+   "color": "Green",
+   "title": "Shared"
+  },
+  {
+   "color": "Orange",
+   "title": "Expired"
+  },
+  {
+   "color": "Yellow",
+   "title": "Archived"
+  }
+ ]
 }
