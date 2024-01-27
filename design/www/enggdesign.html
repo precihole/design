@@ -1,0 +1,112 @@
+{% extends "templates/web.html" %}
+
+{% block title %} PDF Viewer with Watermark {% endblock %}
+
+{% block page_content %}
+    <!-- The body content can be added here if needed -->
+{% endblock %}
+
+{% block style %}
+    <style>
+        canvas {
+            border: 1px solid #ccc; /* Add a border to the canvas for better visibility */
+            margin-bottom: 15px; /* Space between each page */
+        }
+        .expired-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: red;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block script %}
+<script type="module">
+  var status = "Shared";
+//   var shouldPrint =;
+  var filePath = '/files/sample.pdf';
+//   var filePath = "";
+  var { pdfjsLib } = globalThis;
+
+  function addRepeatingWatermark(context, canvasWidth, canvasHeight) {
+    // Function definition...
+    context.font = '20px Arial';
+    context.fillStyle = 'rgba(100, 100, 100, 0.5)';
+    context.textAlign = 'left';
+    context.textBaseline = 'top';
+    const watermarkText = "Sipplier Name";
+    const spacing = 350;
+
+    for (let x = 0; x < canvasWidth; x += spacing) {
+      for (let y = 0; y < canvasHeight; y += spacing) {
+        context.save();
+        context.translate(x, y);
+        context.rotate(-45 * Math.PI / 180);
+        context.fillText(watermarkText, 0, 0);
+        context.restore();
+      }
+    }
+  }
+
+  function disableRightClick(event) {
+    event.preventDefault();
+    alert('Right-click is disabled on this canvas.');
+  }
+
+  if (status !== 'Expired') {
+      var pdfjsLib = window['pdfjs-dist/build/pdf'];
+    // Existing code for handling non-expired status
+    // pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.min.js';
+    var loadingTask = pdfjsLib.getDocument(filePath);
+    loadingTask.promise.then(function(pdf) {
+      console.log('PDF loaded');
+      var numPages = pdf.numPages;
+      for(let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+        pdf.getPage(pageNumber).then(function(page) {
+          console.log('Page ' + pageNumber + ' loaded');
+          var scale = 1.5;
+          var viewport = page.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.id = 'the-canvas-' + pageNumber;
+          canvas.addEventListener('contextmenu', disableRightClick);
+          document.body.appendChild(canvas);
+        //   if (shouldPrint === 1) {
+        //     canvas.classList.remove('no-print');
+        //   } else {
+        //     canvas.classList.add('no-print');
+        //   }
+          var context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          var renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          var renderTask = page.render(renderContext);
+          renderTask.promise.then(function () {
+            console.log('Page ' + pageNumber + ' rendered');
+            addRepeatingWatermark(context, canvas.width, canvas.height);
+          });
+        });
+      }
+    }, function (reason) {
+      console.error(reason);
+    });
+  } else {
+    // Code for handling the 'Expired' status
+    var expiredLabel = document.createElement('div');
+    expiredLabel.textContent = 'Expired';
+    expiredLabel.className = 'expired-label';
+    document.body.appendChild(expiredLabel);
+  }
+</script>
+{% endblock %}
