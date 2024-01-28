@@ -1,4 +1,5 @@
 import frappe
 
 def get_context(context):
-    context.draw = frappe.db.get_value('Drawing Permission', frappe.form_dict.get('query'), ['file_url', 'attached_to_name', 'allow_download', 'status'])
+    context.drawing_details = frappe.db.get_value('Drawing Permission Item', frappe.form_dict.get('query'), ['file_url','allow_download', 'parent'])
+    context.status = frappe.db.get_value('Drawing Permission', context.drawing_details[2], ['attached_to_name', 'status'])

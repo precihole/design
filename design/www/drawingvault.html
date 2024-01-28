@@ -7,22 +7,20 @@
         <table id='drawing-table'>
             <thead>
                 <tr>
-                    <th style="width: 200px;">Name</th>
-                    <th style="width: 200px;">Item</th>
-                    <th style="width: 150px;">File</th>
-                    <th style="width: 150px;">View</th>
+                    <th scope="col">File</th>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Parent (Name)</th>
+                    <th scope="col">Views</th>
                 </tr>
             </thead>
-            <tbody id="drawing-list"> 
-                <!-- Table rows will be dynamically added here -->
-            </tbody>
+            <tbody id="drawing-list"></tbody>
             <tfoot>
                 <tr>
                     <td colspan="4">0 of 0</td>
                 </tr>
             </tfoot>
         </table>
-        <div style="text-align: center;">
+        <div class="text-center">
             <button id="load-more">Load More</button>
         </div>
     </div>
@@ -30,6 +28,18 @@
 
 {% block style %}
     <style>
+        .main-div .text-center {
+            text-align: center;
+        }
+
+        #drawing-table th {
+            width: 200px;
+        }
+
+        #drawing-table th:nth-child(3),
+        #drawing-table th:nth-child(4) {
+            width: 150px;
+        }
         .main-div {
             width: auto;
             margin: auto;
@@ -71,69 +81,53 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        // Your JSON data
-        var jsonData = {{ permitted_drawings }}
+            const drawingDetails = {{ drawing_permission_details | tojson | safe }};
+            const tableBody = document.getElementById('drawing-list');
+            const loadMoreButton = document.getElementById('load-more');
+            const footer = document.querySelector('tfoot td');
+            let currentIndex = 0;
+            const itemsPerPage = 10;
 
-        // Function to create a table row
-        function createTableRow(item) {
-            var row = document.createElement('tr');
-            let query = Object.values(item)[0];
-            Object.values(item).forEach(function(value, index) {
-            var td = document.createElement('td');
-            //console.log(query) issue
-            // Check if the current value is for the 'File' column
-            if (index === 2) { // Assuming 'File' is the second column
-                var a = document.createElement('a');
-                a.setAttribute('href', '/enggdesign?query=' + encodeURIComponent(query));
-                a.textContent = 'View'; // Text displayed for the link
-                td.appendChild(a);
-            } else {
-                td.textContent = value !== null ? value : 'N/A';
+            function createLinkCell(text, href) {
+                const link = document.createElement('a');
+                link.href = href;
+                link.textContent = text;
+                const cell = document.createElement('td');
+                cell.appendChild(link);
+                return cell;
             }
 
-            row.appendChild(td);
-            });
-            return row;
-        }
-
-        // Function to render JSON data to HTML table
-        function renderTable(data) {
-            var tableContainer = document.getElementById('drawing-list');
-            var loadMoreBtn = document.getElementById('load-more');
-            var currentIndex = 10;
-
-            // Render initial rows
-            for (var i = 0; i < Math.min(10, data.length); i++) {
-            var item = data[i];
-            tableContainer.appendChild(createTableRow(item));
+            function createTextCell(text) {
+                const cell = document.createElement('td');
+                cell.textContent = text;
+                return cell;
             }
 
-            // Show or hide the load more button based on the data length
-            loadMoreBtn.style.display = data.length > 10 ? 'block' : 'none';
-
-            // Update the number of rows displayed in the footer
-            var footer = document.querySelector("tfoot td");
-            footer.textContent = Math.min(10, data.length) + " of " + data.length;
-
-            // Load more functionality
-            loadMoreBtn.addEventListener('click', function() {
-            for (var i = currentIndex; i < data.length && i < currentIndex + 10; i++) {
-                var item = data[i];
-                tableContainer.appendChild(createTableRow(item));
+            function createTableRow(item) {
+                const row = document.createElement('tr');
+                row.appendChild(createLinkCell('View', `/enggdesign?query=${encodeURIComponent(item.name)}`));
+                row.appendChild(createTextCell(item.item_code ?? 'N/A'));
+                row.appendChild(createTextCell(item.name ?? 'N/A'));
+                row.appendChild(createTextCell(item.views ?? 'N/A'));
+                return row;
             }
-            currentIndex += 10;
 
-            // Show or hide the load more button based on the data length
-            loadMoreBtn.style.display = currentIndex >= data.length ? 'none' : 'block';
+            function loadItems() {
+                const endIndex = Math.min(currentIndex + itemsPerPage, drawingDetails.length);
+                for (let i = currentIndex; i < endIndex; i++) {
+                    tableBody.appendChild(createTableRow(drawingDetails[i]));
+                }
+                currentIndex = endIndex;
+                updateFooterAndButton();
+            }
 
-            // Update the number of rows displayed in the footer
-            var updatedRows = tableContainer.querySelectorAll("tr").length;
-            footer.textContent = updatedRows + " of " + data.length;
-            });
-        }
+            function updateFooterAndButton() {
+                footer.textContent = `${currentIndex} of ${drawingDetails.length}`;
+                loadMoreButton.style.display = currentIndex < drawingDetails.length ? 'block' : 'none';
+            }
 
-        // Call the function with your JSON data
-        renderTable(jsonData);
-    });
-</script>
+            loadMoreButton.addEventListener('click', loadItems);
+            loadItems(); // Initial load
+        });
+    </script>
 {% endblock %}

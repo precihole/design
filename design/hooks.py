@@ -106,6 +106,9 @@ doc_events = {
     "File": {
 		"before_insert": "design.public.py.file.upload_file_using_zip"
 	},
+	# "View Log": {
+	# 	"after_insert": "design.design_management.api.update_view_count_for_drawing_permission"
+	# },
 	# "*": {
 	# 	"on_update": "method",
 	# 	"on_cancel": "method",

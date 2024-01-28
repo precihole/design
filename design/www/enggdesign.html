@@ -1,112 +1,140 @@
 {% extends "templates/web.html" %}
 
-{% block title %} PDF Viewer with Watermark {% endblock %}
+{% block title %} PDF Viewer with Watermark and 3D Model Viewer {% endblock %}
 
 {% block page_content %}
-    <!-- The body content can be added here if needed -->
+
 {% endblock %}
 
 {% block style %}
-    <style>
-        canvas {
-            border: 1px solid #ccc; /* Add a border to the canvas for better visibility */
-            margin-bottom: 15px; /* Space between each page */
-        }
-        .expired-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: red;
-        }
-        @media print {
-            .no-print {
-                display: none;
-            }
-        }
-    </style>
+<style>
+  .page_content, .web-footer {
+      display: none;
+  }
+
+  canvas, model-viewer {
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+  }
+
+  .expired-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: red;
+  }
+
+  @media print {
+      .no-print {
+          display: none;
+      }
+  }
+</style>
 {% endblock %}
 
 {% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.min.js"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <script type="module">
-  var status = "Shared";
-//   var shouldPrint =;
-  var filePath = '/files/sample.pdf';
-//   var filePath = "";
-  var { pdfjsLib } = globalThis;
+  const drawingStatus = "{{ status[1] }}";
+  const filePath = "{{ drawing_details[0] }}";
+  
+  if (drawingStatus !== 'Expired') {
+    if (filePath.endsWith('.pdf')) {
+      renderPDF(filePath);
+    } else if (filePath.endsWith('.glb')) {
+      renderModel(filePath);
+    }
+  } else {
+    document.body.appendChild(Object.assign(document.createElement('div'), {
+      textContent: 'Expired',
+      className: 'expired-label'
+    }));
+  }
 
-  function addRepeatingWatermark(context, canvasWidth, canvasHeight) {
-    // Function definition...
-    context.font = '20px Arial';
-    context.fillStyle = 'rgba(100, 100, 100, 0.5)';
-    context.textAlign = 'left';
-    context.textBaseline = 'top';
-    const watermarkText = "Sipplier Name";
-    const spacing = 350;
+  function renderPDF(pdfPath) {
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.min.js';
 
-    for (let x = 0; x < canvasWidth; x += spacing) {
-      for (let y = 0; y < canvasHeight; y += spacing) {
-        context.save();
-        context.translate(x, y);
-        context.rotate(-45 * Math.PI / 180);
-        context.fillText(watermarkText, 0, 0);
-        context.restore();
+    function createCanvas(pageNumber) {
+      const canvas = document.createElement('canvas');
+      canvas.id = `the-canvas-${pageNumber}`;
+      canvas.addEventListener('contextmenu', event => {
+        event.preventDefault();
+        alert('Right-click is disabled on this canvas.');
+      });
+      document.body.appendChild(canvas);
+      return canvas;
+    }
+
+    function renderPage(page, pageNumber) {
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+      const canvas = createCanvas(pageNumber);
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      return page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise.then(() => {
+        addWatermark(canvas);
+      });
+    }
+
+    function addWatermark(canvas) {
+      const context = canvas.getContext('2d');
+      context.font = '20px Arial';
+      context.fillStyle = 'rgba(100, 100, 100, 0.5)';
+      context.textAlign = 'left';
+      context.textBaseline = 'top';
+      const watermarkText = "{{ status[0] }}";
+      const spacing = 350;
+
+      for (let x = 0; x < canvas.width; x += spacing) {
+        for (let y = 0; y < canvas.height; y += spacing) {
+          context.save();
+          context.translate(x, y);
+          context.rotate(-45 * Math.PI / 180);
+          context.fillText(watermarkText, 0, 0);
+          context.restore();
+        }
       }
     }
+
+    pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
+      [...Array(pdf.numPages).keys()].forEach(pageNum =>
+        pdf.getPage(pageNum + 1).then(page => renderPage(page, pageNum + 1))
+      );
+    }).catch(reason => console.error(reason));
   }
 
-  function disableRightClick(event) {
-    event.preventDefault();
-    alert('Right-click is disabled on this canvas.');
-  }
+  function renderModel(modelPath) {
+    const modelViewerContainer = document.createElement('div');
+    modelViewerContainer.style.display = 'flex';
+    modelViewerContainer.style.justifyContent = 'center';
+    modelViewerContainer.style.alignItems = 'center';
+    modelViewerContainer.style.height = '100vh';
 
-  if (status !== 'Expired') {
-      var pdfjsLib = window['pdfjs-dist/build/pdf'];
-    // Existing code for handling non-expired status
-    // pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.min.js';
-    var loadingTask = pdfjsLib.getDocument(filePath);
-    loadingTask.promise.then(function(pdf) {
-      console.log('PDF loaded');
-      var numPages = pdf.numPages;
-      for(let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        pdf.getPage(pageNumber).then(function(page) {
-          console.log('Page ' + pageNumber + ' loaded');
-          var scale = 1.5;
-          var viewport = page.getViewport({ scale: scale });
-          var canvas = document.createElement('canvas');
-          canvas.id = 'the-canvas-' + pageNumber;
-          canvas.addEventListener('contextmenu', disableRightClick);
-          document.body.appendChild(canvas);
-        //   if (shouldPrint === 1) {
-        //     canvas.classList.remove('no-print');
-        //   } else {
-        //     canvas.classList.add('no-print');
-        //   }
-          var context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          var renderContext = {
-            canvasContext: context,
-            viewport: viewport
-          };
-          var renderTask = page.render(renderContext);
-          renderTask.promise.then(function () {
-            console.log('Page ' + pageNumber + ' rendered');
-            addRepeatingWatermark(context, canvas.width, canvas.height);
-          });
-        });
-      }
-    }, function (reason) {
-      console.error(reason);
-    });
-  } else {
-    // Code for handling the 'Expired' status
-    var expiredLabel = document.createElement('div');
-    expiredLabel.textContent = 'Expired';
-    expiredLabel.className = 'expired-label';
-    document.body.appendChild(expiredLabel);
+    const modelViewer = document.createElement('model-viewer');
+    modelViewer.alt = "3D Model";
+    modelViewer.src = modelPath;
+    modelViewer.shadowIntensity = "1";
+    modelViewer.cameraControls = true;
+    modelViewer.touchAction = "pan-y";
+    modelViewer.style.height = "80vh";
+
+    modelViewerContainer.appendChild(modelViewer);
+    document.body.appendChild(modelViewerContainer);
   }
+  
+  let currentUrl = window.location.href;
+  let urlParams = new URLSearchParams(new URL(currentUrl).search);
+  let value = urlParams.get('query');
+  frappe.call({
+    method: "design.design_management.doctype.drawing_permission.drawing_permission.log_view_if_not_expired",
+    args: {
+      "reference_name": value
+    }
+  })
 </script>
 {% endblock %}
