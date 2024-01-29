@@ -193,6 +193,9 @@ scheduler_events = {
 # auth_hooks = [
 #	"design.auth.validate"
 # ]
+website_redirects = [
+    {"source": "/", "target": "/drawingvault"}
+]
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["fieldname", "=", "revision_c"]]},
