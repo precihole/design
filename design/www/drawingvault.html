@@ -3,6 +3,13 @@
 {% block title %} Dynamic Table Page {% endblock %}
 
 {% block page_content %}
+{% if frappe.session.user == 'Guest' %}
+    {{ frappe.throw(_("Log in to access this page."), frappe.PermissionError) }}
+{% else %}
+    <div class="welcome-message">
+        <h2>Welcome, {{ supplier or "Valued Supplier" }}</h2>
+    </div>
+
     <div class="main-div">
         <table id='drawing-table'>
             <thead>
@@ -10,7 +17,7 @@
                     <th scope="col">Item Code</th>
                     <th scope="col">Item Name</th>
                     <th scope="col">File</th>
-                    <th scope="col">Views</th>
+                    <th scope="col">Views Available</th>
                     <th scope="col">Child Name</th>
                     <th scope="col">Parent Name</th>
                 </tr>
@@ -18,7 +25,7 @@
             <tbody id="drawing-list"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4">0 of 0</td>
+                    <td colspan="6">0 of 0</td>
                 </tr>
             </tfoot>
         </table>
@@ -26,10 +33,17 @@
             <button id="load-more">Load More</button>
         </div>
     </div>
+{% endif %}
 {% endblock %}
 
 {% block style %}
     <style>
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
         .main-div .text-center {
             text-align: center;
         }
@@ -110,7 +124,7 @@
                 row.appendChild(createTextCell(item.child_item_code ?? 'N/A'));
                 row.appendChild(createTextCell(item.item_name ?? 'N/A'));
                 row.appendChild(createLinkCell('View', `/enggdesign?query=${encodeURIComponent(item.name)}`));
-                row.appendChild(createTextCell(item.views ?? 'N/A'));
+                row.appendChild(createTextCell(item.views_allowed == 0 ? 'Unlimited' : item.views_allowed - item.views));
                 row.appendChild(createTextCell(item.name ?? 'N/A'));
                 row.appendChild(createTextCell(item.parent ?? 'N/A'));
                 return row;

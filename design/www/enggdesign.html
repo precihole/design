@@ -3,11 +3,17 @@
 {% block title %} PDF Viewer with Watermark and 3D Model Viewer {% endblock %}
 
 {% block page_content %}
-
+{% if frappe.session.user == 'Guest' %}
+    {{ frappe.throw(_("Log in to access this page."), frappe.PermissionError) }}
+{% else %}
+{% endif %}
 {% endblock %}
 
 {% block style %}
 <style>
+  #page-enggdesign {
+    display: none;
+  }
   .page_content, .web-footer {
       display: none;
   }
