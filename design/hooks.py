@@ -106,9 +106,6 @@ doc_events = {
     "File": {
 		"before_insert": "design.public.py.file.upload_file_using_zip"
 	},
-	# "View Log": {
-	# 	"after_insert": "design.design_management.api.update_view_count_for_drawing_permission"
-	# },
 	# "*": {
 	# 	"on_update": "method",
 	# 	"on_cancel": "method",
@@ -119,23 +116,28 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#	"all": [
-#		"design.tasks.all"
-#	],
-#	"daily": [
-#		"design.tasks.daily"
-#	],
-#	"hourly": [
-#		"design.tasks.hourly"
-#	],
-#	"weekly": [
-#		"design.tasks.weekly"
-#	],
-#	"monthly": [
-#		"design.tasks.monthly"
-#	],
-# }
+scheduler_events = {
+	# "cron": {
+	# 	"1 * * * *": [
+	# 		"design.design_management.doctype.drawing_permission.drawing_permission.auto_expired",
+	# 	],
+	# },
+	# "all": [
+	# 	"design.tasks.all"
+	# ],
+	# "daily": [
+	# 	"design.design_management.doctype.drawing_permission.drawing_permission.auto_expired",
+	# ],
+	# "hourly": [
+	# 	"design.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"design.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"design.tasks.monthly"
+	# ],
+}
 
 # Testing
 # -------

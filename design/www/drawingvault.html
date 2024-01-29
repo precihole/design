@@ -7,10 +7,12 @@
         <table id='drawing-table'>
             <thead>
                 <tr>
-                    <th scope="col">File</th>
                     <th scope="col">Item Code</th>
-                    <th scope="col">Parent (Name)</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">File</th>
                     <th scope="col">Views</th>
+                    <th scope="col">Child Name</th>
+                    <th scope="col">Parent Name</th>
                 </tr>
             </thead>
             <tbody id="drawing-list"></tbody>
@@ -105,10 +107,12 @@
 
             function createTableRow(item) {
                 const row = document.createElement('tr');
+                row.appendChild(createTextCell(item.child_item_code ?? 'N/A'));
+                row.appendChild(createTextCell(item.item_name ?? 'N/A'));
                 row.appendChild(createLinkCell('View', `/enggdesign?query=${encodeURIComponent(item.name)}`));
-                row.appendChild(createTextCell(item.item_code ?? 'N/A'));
-                row.appendChild(createTextCell(item.name ?? 'N/A'));
                 row.appendChild(createTextCell(item.views ?? 'N/A'));
+                row.appendChild(createTextCell(item.name ?? 'N/A'));
+                row.appendChild(createTextCell(item.parent ?? 'N/A'));
                 return row;
             }
 
