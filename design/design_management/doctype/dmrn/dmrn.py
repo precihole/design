@@ -6,7 +6,7 @@ from frappe.model.document import Document
 # from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 from io import BytesIO
-# import fitz  # PyMuPDF
+import fitz  # PyMuPDF
 
 class DMRN(Document):
 
