@@ -22,7 +22,9 @@
   "print_config_section",
   "opacity",
   "paper_size",
-  "orientation"
+  "orientation",
+  "dmrn_setting_section",
+  "new_drawing_pdf_required"
  ],
  "fields": [
   {
@@ -116,12 +118,24 @@
    "fieldtype": "Select",
    "label": "Orientation",
    "options": "\nLandscape\nPortrait"
+  },
+  {
+   "fieldname": "dmrn_setting_section",
+   "fieldtype": "Section Break",
+   "label": "DMRN Setting"
+  },
+  {
+   "default": "0",
+   "description": "Please note that if it is tick the new drawing pdf uploading will be mandatory",
+   "fieldname": "new_drawing_pdf_required",
+   "fieldtype": "Check",
+   "label": "New Drawing Pdf Required?"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-11 12:27:39.875083",
+ "modified": "2024-02-13 05:01:43.934321",
  "modified_by": "Administrator",
  "module": "Design Management",
  "name": "Design Print Settings",

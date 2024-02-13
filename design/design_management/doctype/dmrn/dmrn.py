@@ -3,7 +3,7 @@
 # by SHUBHAM
 import frappe
 from frappe.model.document import Document
-# from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 from io import BytesIO
 import fitz  # PyMuPDF
@@ -16,82 +16,43 @@ class DMRN(Document):
                 if item.new_drawing:
                     approved_by_fullname = frappe.session.user
                     complete_url = item.new_drawing
-                    pdf_file_path = frappe.db.get_single_value('Design Print Settings', 'public') + complete_url
+                    type = "public" if item.new_drawing.startswith("/files") else "private"
+                    
+                    pdf_file_path = frappe.get_site_path(type, 'files', complete_url.split('/')[-1]);
 
-                    user_signature_path = frappe.db.get_single_value('Design Print Settings', 'public') + "/files/" + self.approved_by + ".png"
+                    user_signature_path = frappe.get_site_path('public', 'files', self.approved_by  + ".png");
                     modified_signature_path = user_signature_path.replace(".com", "")
 
                     # Create a watermarked PDF (using the same file name and path)
                     watermarked_pdf_path = pdf_file_path
-                    self.add_watermark(pdf_file_path, approved_by_fullname, modified_signature_path, watermarked_pdf_path)
+                    # self.add_watermark(pdf_file_path, self.approved_by , user_signature_path, watermarked_pdf_path)   
+                    replacements = [("APPROVED BY", self.approved_by )]
+                    self.replace_text(pdf_file_path, replacements, watermarked_pdf_path)
 
-    def add_watermark(self, pdf_file_path, text_watermark, image_watermark_path, output_path):
-        # Open the original PDF using PyMuPDF
-        original_doc = fitz.open(pdf_file_path)
+    def replace_text(self,pdf_path, replacements, output_path):
+        doc = fitz.open(pdf_path)
 
-        with open(pdf_file_path, 'rb') as original_file:
-            original_pdf = PdfFileReader(original_file)
+        for page in doc:  # Iterate through each page
+            for old_text, new_text in replacements:
+                text_instances = page.search_for(old_text)
+                for inst in text_instances:
+          
+            # This might need adjusting depending on where you want the text
+                    text_x = inst.x1   # Add a small margin to the right of the keyword
+                    text_y = inst.y1
 
-            # Create a BytesIO buffer to store the modified PDF
-            output_buffer = BytesIO()
-            output_pdf = PdfFileWriter()
+                    # Add the new text at the calculated position
+                    page.insert_text((text_x, text_y), new_text, fontname="helv", fontsize=12)
 
-            for page_num in range(len(original_pdf.pages)):
-                original_page = original_pdf.pages[page_num]
+            # Check if the output path is the same as the input path
+        if pdf_path == output_path:
+            # Save using incremental saving
+            doc.save(output_path, incremental=True, encryption=fitz.PDF_ENCRYPT_KEEP)
+        else:
+            # Save to a new file
+            doc.save(output_path)
 
-                # Get dimensions of the page using PyMuPDF
-                page_width = int(original_page.mediaBox.upperRight[0])
-                page_height = int(original_page.mediaBox.upperRight[1])
-                
-                # Create a new BytesIO buffer for each page
-                watermark_buffer = BytesIO()
-
-                # Create a watermark canvas for the current page
-                watermark_canvas = canvas.Canvas(watermark_buffer, pagesize=(page_width, page_height))
-                self.draw_watermark(watermark_canvas, image_watermark_path, text_watermark, page_width, page_height)
-                watermark_pdf = PdfFileReader(watermark_buffer)
-                watermark_page = watermark_pdf.pages[0]
-
-                # Merge the watermark canvas with the current page
-                original_page.merge_page(watermark_page)
-
-                # Add the modified page to the new PDF buffer
-                output_pdf.addPage(original_page)
-
-            # Save the watermarked PDF to the output buffer
-            output_pdf.write(output_buffer)
-            output_buffer.seek(0)
-
-            # Save the buffer to the specified output path
-            with open(output_path, 'wb') as output_file:
-                output_file.write(output_buffer.read())
-
-
-
-    def draw_watermark(self, canvas, image_path, text, page_width, page_height):
-        # Set font and size for text watermark
-        canvas.setFont("Helvetica", 16)
-        
-        # Draw the watermark text on the canvas
-        text_width = int(canvas.stringWidth(text, "Helvetica", 16))
-        text_height = 26
-
-        text_x = int(page_width - text_width - 20)
-        #text_y = int(img_y + img_height + 10)
-        text_y = int(20)
-        canvas.drawString(text_x, text_y, text)
-
-        # Draw the transparent image on the canvas
-        img_width = 100
-        img_height = 50
-
-        img_x = int(page_width - img_width - 20)
-        img_y = int(20)
-        img_y = int(text_y + text_height + 20)
-        canvas.drawImage(image_path, img_x, img_y, width=img_width, height=img_height, mask='auto')
-        canvas.save()
-
-
+    
 
 ###########################################################################################################################
 #by rehan
@@ -120,8 +81,9 @@ class DMRN(Document):
         if self.dmrn_details:
             for item in self.dmrn_details:
                 # new drawing validation
-                if self.get('__islocal') == None and not item.new_drawing:
-                    frappe.throw(f'New Drawing is mandatory in {item.item_code}')
+                if frappe.db.get_single_value('Design Print Settings', 'new_drawing_pdf_required') == 1 :
+                    if self.get('__islocal') == None and not item.new_drawing:
+                        frappe.throw(f'New Drawing is mandatory in {item.item_code}')
                     
                 old_revision = frappe.db.get_value('Item', item.item_code, 'revision_c')
                 if old_revision:
