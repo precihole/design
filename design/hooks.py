@@ -116,7 +116,7 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
+# scheduler_events = {
 	# "cron": {
 	# 	"1 * * * *": [
 	# 		"design.design_management.doctype.drawing_permission.drawing_permission.auto_expired",
@@ -137,7 +137,7 @@ scheduler_events = {
 	# "monthly": [
 	# 	"design.tasks.monthly"
 	# ],
-}
+# }
 
 # Testing
 # -------
@@ -193,9 +193,9 @@ scheduler_events = {
 # auth_hooks = [
 #	"design.auth.validate"
 # ]
-website_redirects = [
-    {"source": "/", "target": "/drawingvault"}
-]
+# website_redirects = [
+#     {"source": "/", "target": "/drawingvault"}
+# ]
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["fieldname", "=", "revision_c"]]},
