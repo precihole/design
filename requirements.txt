@@ -2,3 +2,4 @@
 reportlab
 fitz
 PyPDF2
+frontend
