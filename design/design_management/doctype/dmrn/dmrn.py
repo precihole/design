@@ -3,7 +3,7 @@
 # by SHUBHAM
 import frappe
 from frappe.model.document import Document
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from pypdf import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 from io import BytesIO
 import fitz  # PyMuPDF
