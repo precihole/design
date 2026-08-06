@@ -7,19 +7,24 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ecn_raised_by",
   "naming_series",
   "item_code",
   "item_name",
   "description",
   "revision",
-  "remark",
+  "project_no",
+  "pmt_drawing_no",
   "column_break_4",
   "posting_date",
+  "time",
   "department",
   "suggested_change",
   "warehouse_details",
   "total_qty",
-  "amended_from"
+  "amended_from",
+  "section_break_xrmu",
+  "attachment"
  ],
  "fields": [
   {
@@ -37,11 +42,6 @@
    "label": "Description",
    "no_copy": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "remark",
-   "fieldtype": "Small Text",
-   "label": "Remark (If Any)"
   },
   {
    "fieldname": "suggested_change",
@@ -118,13 +118,48 @@
    "label": "From Department",
    "options": "Department",
    "reqd": 1
+  },
+  {
+   "description": "Project No. Format eg : A-A22 or A-A222 or A-A2222",
+   "fieldname": "project_no",
+   "fieldtype": "Link",
+   "label": "Project No",
+   "options": "Project"
+  },
+  {
+   "description": "PMT No. Format eg : A-A00-0001 or A-A000-0001 or A-A0000-0001",
+   "fieldname": "pmt_drawing_no",
+   "fieldtype": "Data",
+   "label": "PMT Drawing No"
+  },
+  {
+   "fieldname": "ecn_raised_by",
+   "fieldtype": "Link",
+   "label": "ECN Raised by",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_xrmu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "default": "Now",
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-28 10:22:54.562742",
- "modified_by": "Administrator",
+ "modified": "2026-08-05 15:25:32.459738",
+ "modified_by": "aditya@preciholesports.com",
  "module": "Design Management",
  "name": "ECN",
  "naming_rule": "By \"Naming Series\" field",
@@ -143,6 +178,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
